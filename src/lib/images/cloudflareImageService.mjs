@@ -33,13 +33,29 @@ function cloudflareOptionPairs(options, config) {
   return pairs.map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`).join(",");
 }
 
+function normalizeSource(src, baseUrl) {
+  const source = stringSource(src);
+
+  try {
+    const base = new URL(baseUrl);
+    const url = new URL(source, base);
+
+    if (url.origin === base.origin) {
+      return encodeURI(`${url.pathname}${url.search}`).replace(/^\/+/, "");
+    }
+
+    return encodeURI(url.href);
+  } catch {
+    return encodeURI(source).replace(/^\/+/, "");
+  }
+}
+
 function cloudflareImageURL(options, config) {
   const baseUrl = (config.baseUrl ?? "").replace(/\/+$/, "");
-  const source = stringSource(options.src);
-  const encodedSource = source.startsWith("/") ? source : encodeURI(source);
+  const source = normalizeSource(options.src, baseUrl);
   const params = cloudflareOptionPairs(options, config);
 
-  return `${baseUrl}/cdn-cgi/image/${params}/${encodedSource}`;
+  return `${baseUrl}/cdn-cgi/image/${params}/${source}`;
 }
 
 function targetDimensions(options) {
