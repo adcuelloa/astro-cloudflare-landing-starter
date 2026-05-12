@@ -1,0 +1,30 @@
+{
+  "home": {
+    "title": "Acme — Build something better",
+    "description": "Acme is a clean, production-ready Astro template with i18n, content collections, GSAP, and Cloudflare-friendly SEO."
+  },
+  "about": {
+    "title": "About — Acme",
+    "description": "Who we are, what we build, and why this template exists."
+  },
+  "blog": {
+    "title": "Blog — Acme",
+    "description": "Articles, notes, and tutorials from the Acme team."
+  },
+  "contact": {
+    "title": "Contact — Acme",
+    "description": "Get in touch with the Acme team."
+  },
+  "legalPrivacy": {
+    "title": "Privacy Policy — Acme",
+    "description": "How Acme collects, uses, and protects visitor data."
+  },
+  "legalTerms": {
+    "title": "Terms — Acme",
+    "description": "Terms of use for the Acme website."
+  },
+  "legalCookies": {
+    "title": "Cookie Policy — Acme",
+    "description": "How Acme uses cookies and consent-gated analytics."
+  }
+}

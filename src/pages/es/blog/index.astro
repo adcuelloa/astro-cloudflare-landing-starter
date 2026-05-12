@@ -1,0 +1,97 @@
+---
+import { getCollection, getEntries, render } from "astro:content";
+import { Image } from "astro:assets";
+import Layout from "@/layouts/Layout.astro";
+import { useTranslations } from "@/i18n/utils";
+import { alternateLinks } from "@/i18n/slugs";
+import { localizedCollectionEntryPath } from "@/lib/contentRouting";
+import { getPageSeo } from "@/lib/seo";
+
+const lang = "es";
+const t = useTranslations(lang);
+const site = Astro.site ?? new URL(import.meta.env.PUBLIC_SITE_URL ?? "https://acme.example.com");
+const pageSeo = getPageSeo(lang, "blog");
+const cdnBaseUrl = (import.meta.env.PUBLIC_CDN_URL ?? "https://cdn.acme.example.com").replace(
+  /\/+$/,
+  ""
+);
+
+const sortedPosts = (await getCollection("blog", ({ id }) => id.startsWith("es/"))).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const posts = await Promise.all(
+  sortedPosts.map(async (post) => {
+    const categories = await getEntries(post.data.categories);
+    const { remarkPluginFrontmatter } = await render(post);
+    const frontmatter = remarkPluginFrontmatter as { readTime?: number };
+    return { post, categories, readTime: frontmatter.readTime ?? 1 };
+  })
+);
+
+const dateFormatter = new Intl.DateTimeFormat("es", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+});
+---
+
+<Layout seo={{ ...pageSeo, alternates: alternateLinks("blog", site) }}>
+  <main class="bg-slate-50 text-slate-800">
+    <section class="py-16 sm:py-24">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6">
+        <p class="eyebrow mb-3">{t("blog.eyebrow")}</p>
+        <h1 class="max-w-4xl">{t("blog.heading")}</h1>
+        <p class="lead mt-4 max-w-3xl">{t("blog.lead")}</p>
+      </div>
+    </section>
+
+    <section class="bg-white py-16 sm:py-24">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6">
+        {posts.length === 0 ? <p>{t("blog.empty")}</p> : null}
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            posts.map(({ post, categories, readTime }) => (
+              <a
+                href={localizedCollectionEntryPath("blog", post)}
+                class="card group flex h-full flex-col overflow-hidden no-underline"
+              >
+                {/* Blog card: 16:9 stable size. The CDN serves prepared masters.
+                    See docs/IMAGE_ASSETS.md for the master sizing recommendations. */}
+                <Image
+                  src={post.data.image ?? `${cdnBaseUrl}/blog/default.webp`}
+                  alt={post.data.imageAlt ?? ""}
+                  width={720}
+                  height={405}
+                  format="webp"
+                  quality={76}
+                  widths={[320, 480, 640, 720]}
+                  sizes="(min-width: 1280px) 405px, (min-width: 1024px) calc((100vw - 4rem) / 3), (min-width: 640px) calc((100vw - 3rem) / 2), calc(100vw - 2rem)"
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-video w-full bg-slate-100 object-cover"
+                />
+                <div class="flex flex-1 flex-col gap-3 p-6">
+                  <span class="font-display text-accent-800 text-xs font-bold tracking-normal uppercase">
+                    {categories.map((cat) => cat.data.title).join(", ")}
+                  </span>
+                  <h2 class="text-xl">{post.data.title}</h2>
+                  <p class="line-clamp-3 text-sm leading-relaxed text-slate-600">
+                    {post.data.description}
+                  </p>
+                  <div class="mt-auto flex gap-3 text-xs text-slate-500">
+                    <span>{dateFormatter.format(post.data.pubDate)}</span>
+                    <span>·</span>
+                    <span>
+                      {readTime} min {t("blog.readLabel")}
+                    </span>
+                  </div>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

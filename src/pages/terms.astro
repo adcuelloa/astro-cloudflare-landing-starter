@@ -1,0 +1,22 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { useTranslations } from "@/i18n/utils";
+import { alternateLinks } from "@/i18n/slugs";
+import { getPageSeo } from "@/lib/seo";
+
+const lang = "en";
+const t = useTranslations(lang);
+const site = Astro.site ?? new URL(import.meta.env.PUBLIC_SITE_URL ?? "https://acme.example.com");
+const pageSeo = getPageSeo(lang, "legalTerms");
+const body = t("legal.terms.body") as string[];
+---
+
+<Layout seo={{ ...pageSeo, alternates: alternateLinks("legalTerms", site) }}>
+  <main class="bg-white py-16 sm:py-24">
+    <section class="prose mx-auto max-w-3xl px-4 sm:px-6">
+      <h1>{t("legal.terms.heading")}</h1>
+      <p class="text-sm text-slate-500">{t("legal.terms.updated")}</p>
+      {body.map((p) => <p>{p}</p>)}
+    </section>
+  </main>
+</Layout>

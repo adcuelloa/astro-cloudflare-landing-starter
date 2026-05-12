@@ -1,0 +1,67 @@
+{
+  "title": "Acme — Construye algo mejor",
+  "description": "Plantilla Astro con i18n, colecciones de contenido, GSAP, SEO y analítica con consentimiento.",
+  "hero": {
+    "eyebrow": "Plantilla Astro lista para producción",
+    "title": "Lanza un sitio rápido y multilingüe en días, no semanas.",
+    "lead": "Acme reúne los patrones que usamos siempre: i18n, colecciones de contenido, animaciones GSAP, imágenes en Cloudflare y analítica que respeta el consentimiento.",
+    "ctaPrimary": "Leer la documentación",
+    "ctaSecondary": "Explorar el blog",
+    "imageAlt": "Arte abstracto del héroe"
+  },
+  "features": {
+    "eyebrow": "Por qué esta plantilla",
+    "title": "Opinada donde ayuda, flexible donde importa.",
+    "lead": "Toma lo que necesites; las piezas están desacopladas.",
+    "items": [
+      {
+        "title": "i18n tipado",
+        "body": "Traducciones con autocompletado, rutas por idioma y alternates hreflang."
+      },
+      {
+        "title": "Colecciones de contenido",
+        "body": "Blog, autores y categorías definidos con Zod — frontmatter estricto, sin sorpresas."
+      },
+      {
+        "title": "Animaciones GSAP",
+        "body": "ScrollTrigger respetando prefers-reduced-motion y limpieza en cada navegación."
+      },
+      {
+        "title": "Analítica con consentimiento",
+        "body": "Vanilla CookieConsent integra con Cloudflare Zaraz y Google Consent Mode v2."
+      },
+      {
+        "title": "Imágenes en Cloudflare",
+        "body": "Astro <Image /> conectado a Cloudflare CDN Image Transformations."
+      },
+      {
+        "title": "SEO que valida",
+        "body": "Canonical, hreflang, OG, Twitter y JSON-LD: organización, breadcrumb, artículo."
+      }
+    ]
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Preguntas comunes antes de hacer fork.",
+    "items": [
+      {
+        "q": "¿Puedo quitar piezas que no necesito?",
+        "a": "Sí. Cada módulo de lib es independiente — quita Zaraz, el banner de cookies o GSAP sin tocar el resto."
+      },
+      {
+        "q": "¿Requiere Cloudflare?",
+        "a": "El despliegue y servicio de imágenes por defecto asumen Cloudflare Pages, pero puedes cambiar el hosting con cambios menores."
+      },
+      {
+        "q": "¿Cómo se tipan las traducciones?",
+        "a": "useTranslations() infiere las claves desde los JSON en tiempo de compilación; claves desconocidas fallan el type-check."
+      }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Siguiente paso",
+    "title": "Clona, ejecuta, personaliza.",
+    "lead": "Abre el README y la carpeta docs/ para un recorrido completo de la arquitectura.",
+    "label": "Ver el README"
+  }
+}

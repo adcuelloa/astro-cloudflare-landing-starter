@@ -1,0 +1,67 @@
+{
+  "title": "Acme — Build something better",
+  "description": "A clean Astro starter with i18n, content collections, GSAP, SEO, and consent-gated analytics.",
+  "hero": {
+    "eyebrow": "Production-ready Astro template",
+    "title": "Ship a fast, multilingual site in days, not weeks.",
+    "lead": "Acme bundles the patterns we keep reaching for — i18n, content collections, GSAP scroll reveals, Cloudflare images, and analytics that respects consent.",
+    "ctaPrimary": "Read the docs",
+    "ctaSecondary": "Browse the blog",
+    "imageAlt": "Abstract gradient hero artwork"
+  },
+  "features": {
+    "eyebrow": "Why this template",
+    "title": "Opinionated where it helps, flexible where it matters.",
+    "lead": "Pick what you need; the pieces are decoupled.",
+    "items": [
+      {
+        "title": "Typed i18n",
+        "body": "Autocomplete-friendly translations with locale-aware routing and hreflang alternates."
+      },
+      {
+        "title": "Content collections",
+        "body": "Blog, authors, and categories defined with Zod — strict frontmatter, zero surprises."
+      },
+      {
+        "title": "GSAP scroll animations",
+        "body": "ScrollTrigger setup that respects prefers-reduced-motion and cleans up on navigation."
+      },
+      {
+        "title": "Consent-gated analytics",
+        "body": "Vanilla CookieConsent bridges to Cloudflare Zaraz and Google Consent Mode v2."
+      },
+      {
+        "title": "Cloudflare images",
+        "body": "Astro <Image /> wired to Cloudflare CDN Image Transformations."
+      },
+      {
+        "title": "SEO that actually validates",
+        "body": "Canonical, hreflang, OG, Twitter, JSON-LD organization + breadcrumb + article helpers."
+      }
+    ]
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Common questions before you fork.",
+    "items": [
+      {
+        "q": "Can I drop pieces I don't need?",
+        "a": "Yes. Each lib module is self-contained — remove Zaraz, the cookie banner, or GSAP without touching the rest."
+      },
+      {
+        "q": "Does it require Cloudflare?",
+        "a": "The default deployment and image service assume Cloudflare Pages, but you can swap the hosting target with minor tweaks."
+      },
+      {
+        "q": "How are translations typed?",
+        "a": "useTranslations() infers keys from your JSON files at compile time, so unknown keys fail typecheck."
+      }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Next step",
+    "title": "Clone, run, customize.",
+    "lead": "Open the README and the docs/ folder for the full architecture tour.",
+    "label": "View the README"
+  }
+}

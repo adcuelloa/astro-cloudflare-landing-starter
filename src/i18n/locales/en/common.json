@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "ogImage": "og-image-en.jpg"
+  },
+  "brand": {
+    "name": "Acme",
+    "domain": "acme.example.com",
+    "email": "hello@acme.example.com",
+    "phone": "+1-000-000-0000"
+  },
+  "nav": {
+    "about": "About",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "cta": {
+    "header": "Get started",
+    "mobile": "Start"
+  },
+  "labels": {
+    "learnMore": "Learn more",
+    "readMore": "Read more",
+    "viewDetails": "View details",
+    "back": "Back"
+  },
+  "skip": "Skip to main content",
+  "aria": {
+    "home": "Acme home",
+    "languagePicker": "Select language",
+    "mobileNav": "Mobile navigation",
+    "openMenu": "Open menu",
+    "primaryNav": "Primary navigation",
+    "switchLanguage": "Switch to",
+    "cookieSettings": "Open cookie preferences"
+  },
+  "footer": {
+    "description": "A clean Astro starter for production sites — i18n, content collections, SEO, GSAP, and consent-gated analytics.",
+    "callLabel": "Call",
+    "emailLabel": "Email",
+    "cookieSettings": "Cookie preferences",
+    "copyright": "All rights reserved.",
+    "columns": [
+      {
+        "title": "Site",
+        "items": [
+          { "label": "About", "route": "about" },
+          { "label": "Blog", "route": "blog" },
+          { "label": "Contact", "route": "contact" }
+        ]
+      },
+      {
+        "title": "Legal",
+        "items": [
+          { "label": "Privacy", "route": "legalPrivacy" },
+          { "label": "Terms", "route": "legalTerms" },
+          { "label": "Cookies", "route": "legalCookies" }
+        ]
+      }
+    ]
+  }
+}

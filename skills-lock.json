@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "astro-cloudflare-landing": {
+      "source": ".skills/astro-cloudflare-landing",
+      "sourceType": "local",
+      "computedHash": "5859fb7dad8984aa754bcbe40df3a89bb3b43212f0b7f08da0f68a5873f7dfdc"
+    }
+  },
+  "recommendedExternalSkills": [
+    "astro",
+    "tailwind-css-patterns",
+    "typescript-advanced-types",
+    "cloudflare",
+    "cloudflare-deploy",
+    "wrangler",
+    "workers-best-practices",
+    "seo",
+    "web-perf",
+    "accessibility",
+    "frontend-design"
+  ]
+}

@@ -1,0 +1,4 @@
+# Cloudflare Pages redirects. Format: <from> <to> <status>
+# Example legacy → flat URL rewrites:
+# /legal/privacy   /privacy   301
+# /legal/terms     /terms     301

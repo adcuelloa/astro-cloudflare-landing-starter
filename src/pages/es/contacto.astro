@@ -1,0 +1,31 @@
+---
+import { Mail } from "@lucide/astro";
+import Layout from "@/layouts/Layout.astro";
+import { useTranslations } from "@/i18n/utils";
+import { alternateLinks } from "@/i18n/slugs";
+import { getPageSeo } from "@/lib/seo";
+
+const lang = "es";
+const t = useTranslations(lang);
+const site = Astro.site ?? new URL(import.meta.env.PUBLIC_SITE_URL ?? "https://acme.example.com");
+const pageSeo = getPageSeo(lang, "contact");
+---
+
+<Layout seo={{ ...pageSeo, alternates: alternateLinks("contact", site) }}>
+  <main class="bg-white py-16 sm:py-24">
+    <section class="mx-auto max-w-2xl px-4 sm:px-6">
+      <p class="eyebrow mb-3">{t("contact.eyebrow")}</p>
+      <h1>{t("contact.heading")}</h1>
+      <p class="lead mt-4">{t("contact.lead")}</p>
+      <a
+        href={`mailto:${t("common.brand.email")}`}
+        class="font-display bg-brand-700 hover:bg-brand-800 mt-8 inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white no-underline transition"
+        data-zaraz-cta="contact-email"
+      >
+        <Mail size={16} aria-hidden="true" />
+        {t("common.brand.email")}
+      </a>
+      <p class="mt-6 text-sm text-slate-500">{t("contact.note")}</p>
+    </section>
+  </main>
+</Layout>

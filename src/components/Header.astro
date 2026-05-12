@@ -1,0 +1,180 @@
+---
+import { Menu, X } from "@lucide/astro";
+import BrandMark from "@/components/icons/BrandMark.astro";
+import LanguagePicker from "@/components/LanguagePicker.astro";
+import { getLangFromUrl, useTranslations } from "@/i18n/utils";
+import { type Locale, localizedPath, type RouteKey } from "@/i18n/slugs";
+
+const lang = getLangFromUrl(Astro.url) as Locale;
+const t = useTranslations(lang);
+
+const navItems: Array<{ route: RouteKey; label: string }> = [
+  { route: "about", label: t("common.nav.about") },
+  { route: "blog", label: t("common.nav.blog") },
+  { route: "contact", label: t("common.nav.contact") },
+];
+---
+
+<header id="site-header" transition:name="site-header" class="fixed inset-x-0 top-0 z-99">
+  <div class="mx-auto flex h-18 max-w-7xl items-center gap-3 px-4 sm:px-6">
+    <a
+      href={localizedPath(lang, "home")}
+      class="text-brand-800 mr-auto flex shrink-0 items-center gap-2 no-underline"
+      aria-label={t("common.aria.home")}
+    >
+      <BrandMark class="h-9 w-9" />
+      <span class="font-display text-xl font-extrabold tracking-normal">
+        {t("common.brand.name")}
+      </span>
+    </a>
+
+    <nav class="hidden items-center gap-0.5 lg:flex" aria-label={t("common.aria.primaryNav")}>
+      {
+        navItems.map(({ route, label }) => (
+          <a
+            href={localizedPath(lang, route)}
+            class="font-display hover:bg-brand-50 hover:text-brand-800 rounded-full px-3 py-2 text-sm font-semibold tracking-normal text-slate-800 no-underline transition-colors duration-150"
+          >
+            {label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="hidden lg:flex">
+      <LanguagePicker />
+    </div>
+
+    <a
+      href={localizedPath(lang, "contact")}
+      class="font-display bg-accent-500 hover:bg-accent-600 hidden shrink-0 rounded-full px-5 py-2.5 text-sm font-bold tracking-normal text-slate-900 transition-all duration-220 hover:-translate-y-px hover:text-white active:translate-y-px lg:inline-flex"
+      data-zaraz-cta="header-cta"
+    >
+      {t("common.cta.header")}
+    </a>
+
+    <button
+      id="menu-btn"
+      class="text-brand-800 ml-1 flex h-10 w-10 items-center justify-center rounded-md lg:hidden"
+      aria-label={t("common.aria.openMenu")}
+      aria-expanded="false"
+    >
+      <Menu size={22} aria-hidden="true" class="menu-icon" />
+      <X size={22} aria-hidden="true" class="menu-close hidden" />
+    </button>
+  </div>
+
+  <div
+    id="mobile-menu"
+    class="hidden border-t border-slate-200 bg-white px-6 pt-4 pb-6 shadow-lg lg:hidden"
+    aria-hidden="true"
+  >
+    <nav class="flex flex-col gap-1" aria-label={t("common.aria.mobileNav")}>
+      {
+        navItems.map(({ route, label }) => (
+          <a
+            href={localizedPath(lang, route)}
+            class="font-display hover:bg-brand-50 hover:text-brand-800 rounded-md px-4 py-3 text-base font-semibold tracking-normal text-slate-800 transition-colors"
+          >
+            {label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="mt-4 flex items-center justify-between gap-3">
+      <LanguagePicker />
+      <a
+        href={localizedPath(lang, "contact")}
+        class="font-display bg-accent-500 rounded-full px-5 py-3 text-center text-sm font-bold tracking-normal text-slate-900 no-underline"
+      >
+        {t("common.cta.mobile")}
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  #site-header {
+    transition:
+      background 280ms ease,
+      border-color 280ms ease,
+      box-shadow 280ms ease;
+    background: color-mix(in oklch, var(--bg-surface) 92%, transparent);
+    border-bottom: 1px solid var(--border-subtle);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    box-shadow: 0 1px 0 var(--border-subtle);
+  }
+
+  #site-header.scrolled {
+    background: color-mix(in oklch, var(--bg-surface) 98%, transparent);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    box-shadow:
+      0 2px 0 var(--border-subtle),
+      0 8px 32px oklch(0.3 0.013 48 / 0.1);
+  }
+</style>
+
+<script>
+  // Re-init pattern: every event listener is bound through an AbortController
+  // and torn down before the next page swap. This prevents leaks when the
+  // header survives a transition but the inner script re-runs.
+  let headerController: AbortController | null = null;
+  let lifecycleBound = false;
+
+  function cleanupHeader() {
+    headerController?.abort();
+    headerController = null;
+  }
+
+  function initHeader() {
+    cleanupHeader();
+
+    const header = document.getElementById("site-header");
+    const menuBtn = document.getElementById("menu-btn");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const menuIcon = menuBtn?.querySelector(".menu-icon");
+    const closeIcon = menuBtn?.querySelector(".menu-close");
+    if (!header || !menuBtn || !mobileMenu) return;
+
+    const headerEl = header;
+    const menuButton = menuBtn;
+    const mobileNav = mobileMenu;
+    const controller = new AbortController();
+    headerController = controller;
+
+    function setMenuOpen(open: boolean) {
+      mobileNav.classList.toggle("hidden", !open);
+      mobileNav.setAttribute("aria-hidden", String(!open));
+      menuButton.setAttribute("aria-expanded", String(open));
+      menuIcon?.classList.toggle("hidden", open);
+      closeIcon?.classList.toggle("hidden", !open);
+    }
+
+    menuButton.addEventListener(
+      "click",
+      () => setMenuOpen(mobileNav.classList.contains("hidden")),
+      { signal: controller.signal }
+    );
+
+    mobileNav.querySelectorAll("a, button").forEach((link) => {
+      link.addEventListener("click", () => setMenuOpen(false), { signal: controller.signal });
+    });
+
+    function onScroll() {
+      headerEl.classList.toggle("scrolled", window.scrollY > 20);
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true, signal: controller.signal });
+    onScroll();
+  }
+
+  initHeader();
+
+  if (!lifecycleBound) {
+    lifecycleBound = true;
+    document.addEventListener("astro:before-swap", cleanupHeader);
+    document.addEventListener("astro:page-load", initHeader);
+  }
+</script>

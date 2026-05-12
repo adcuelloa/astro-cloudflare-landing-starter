@@ -1,0 +1,7 @@
+{
+  "eyebrow": "About",
+  "heading": "A small, opinionated Astro starter.",
+  "lead": "Acme exists to give teams a tested baseline: typed i18n, content collections, SEO that validates, and animations that respect users.",
+  "missionTitle": "Mission",
+  "missionText": "Encode the boring, reusable parts of a production website so each new project starts at sprint three, not sprint zero."
+}

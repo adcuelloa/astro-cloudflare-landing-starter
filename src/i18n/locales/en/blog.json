@@ -1,0 +1,10 @@
+{
+  "eyebrow": "Blog",
+  "heading": "Notes from the team.",
+  "lead": "Articles and tutorials about Astro, web performance, and the patterns this template encodes.",
+  "readLabel": "read",
+  "backToList": "All articles",
+  "publishedOn": "Published on ",
+  "breadcrumb": "Blog",
+  "empty": "No articles published yet."
+}

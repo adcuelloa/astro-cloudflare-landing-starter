@@ -1,0 +1,7 @@
+{
+  "name": "Acme Team",
+  "bio": "Editorial team writing about Astro, web performance, and reusable patterns.",
+  "avatar": "https://cdn.acme.example.com/authors/team.webp",
+  "twitter": "@acme",
+  "linkedin": "acme"
+}

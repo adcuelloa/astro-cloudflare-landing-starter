@@ -1,0 +1,15 @@
+.agents/**
+.claude/**
+.codex/**
+.serena/**
+.skills/**
+.wrangler/**
+.astro/**
+dist
+build
+coverage
+node_modules
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+skills-lock.json

@@ -1,0 +1,119 @@
+---
+import { defaultLang, languages, ui } from "@/i18n/ui";
+import { getLangFromUrl, useTranslations } from "@/i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const supported = Object.keys(languages) as (keyof typeof ui)[];
+---
+
+<div
+  data-lang-pill
+  data-current-lang={lang}
+  data-default-lang={defaultLang}
+  class="lang-pill flex items-center"
+  role="group"
+  aria-label={t("common.aria.languagePicker")}
+>
+  {
+    supported.map((l) => (
+      <button
+        type="button"
+        data-lang={l}
+        aria-pressed={l === lang}
+        aria-label={`${t("common.aria.switchLanguage")} ${languages[l]}`}
+        class:list={[
+          "lang-opt font-display cursor-pointer px-2.5 py-1 text-xs font-bold tracking-normal uppercase transition-colors duration-150",
+          l === lang ? "lang-active" : "lang-inactive",
+        ]}
+      >
+        {l.toUpperCase()}
+      </button>
+    ))
+  }
+</div>
+
+<style>
+  .lang-pill {
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--bg-surface);
+    padding: 2px;
+    gap: 1px;
+  }
+  .lang-opt {
+    border-radius: 999px;
+    line-height: 1;
+  }
+  .lang-active {
+    background: var(--color-ink);
+    color: white;
+  }
+  .lang-inactive {
+    background: transparent;
+    color: var(--fg-3);
+  }
+  .lang-inactive:hover {
+    background: var(--bg-surface-2);
+    color: var(--fg-1);
+  }
+</style>
+
+<script>
+  // Reads the rendered <link rel="alternate" hreflang> tags from Layout.astro
+  // to find the localized URL for the target language. If no alternates exist
+  // (e.g. localized page not built), falls back to language-root navigation.
+  import { navigate } from "astro:transitions/client";
+
+  let pickerController: AbortController | null = null;
+  let lifecycleBound = false;
+
+  function cleanup() {
+    pickerController?.abort();
+    pickerController = null;
+  }
+
+  function init() {
+    cleanup();
+
+    document.querySelectorAll<HTMLElement>("[data-lang-pill]").forEach((pill) => {
+      const controller = new AbortController();
+      pickerController = controller;
+      const currentLang = pill.dataset.currentLang ?? "en";
+      const defaultLang = pill.dataset.defaultLang ?? "en";
+
+      const hasAlternates = document.querySelector('link[rel="alternate"][hreflang]') !== null;
+      pill.classList.toggle("hidden", !hasAlternates);
+
+      pill.querySelectorAll<HTMLButtonElement>("button[data-lang]").forEach((btn) => {
+        btn.addEventListener(
+          "click",
+          () => {
+            const targetLang = btn.dataset.lang ?? "";
+            if (targetLang === currentLang) return;
+
+            const alt = document.querySelector<HTMLLinkElement>(
+              `link[rel="alternate"][hreflang="${targetLang}"]`
+            );
+            if (alt?.href) {
+              const url = new URL(alt.href);
+              navigate(url.pathname);
+              return;
+            }
+            navigate(targetLang === defaultLang ? "/" : `/${targetLang}`);
+          },
+          { signal: controller.signal }
+        );
+      });
+    });
+  }
+
+  init();
+
+  if (!lifecycleBound) {
+    lifecycleBound = true;
+    document.addEventListener("astro:before-swap", cleanup);
+    document.addEventListener("astro:page-load", init);
+  }
+</script>

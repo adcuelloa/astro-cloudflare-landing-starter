@@ -1,0 +1,28 @@
+{
+  "privacy": {
+    "heading": "Política de Privacidad",
+    "updated": "1 de enero de 2026",
+    "body": [
+      "Acme recopila datos de contacto solo cuando envías un formulario, un correo o interactúas con herramientas con consentimiento.",
+      "Usamos esa información para responder mensajes y respetar tus preferencias de cookies.",
+      "Esta política se actualizará cuando cambien proveedores, plazos de retención o requisitos legales."
+    ]
+  },
+  "terms": {
+    "heading": "Términos de Uso",
+    "updated": "1 de enero de 2026",
+    "body": [
+      "Este sitio ofrece información, artículos y opciones de contacto.",
+      "Úsalo de forma lícita. No copies, revendas ni tergiverses su contenido sin permiso.",
+      "Los detalles pueden cambiar a medida que el proyecto evoluciona."
+    ]
+  },
+  "cookies": {
+    "heading": "Política de Cookies",
+    "updated": "1 de enero de 2026",
+    "body": [
+      "Las cookies necesarias guardan tus preferencias y permiten el funcionamiento básico del sitio.",
+      "Las cookies opcionales de marketing permanecen desactivadas a menos que des consentimiento. Las integraciones con Cloudflare Zaraz están condicionadas al consentimiento."
+    ]
+  }
+}

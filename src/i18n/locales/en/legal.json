@@ -1,0 +1,28 @@
+{
+  "privacy": {
+    "heading": "Privacy Policy",
+    "updated": "January 1, 2026",
+    "body": [
+      "Acme collects contact details only when you submit a form, send an email, or interact with consent-gated tools.",
+      "We use this information to respond to messages and to honor your cookie preferences.",
+      "This policy will be updated as vendors, retention practices, and jurisdictional requirements change."
+    ]
+  },
+  "terms": {
+    "heading": "Terms of Use",
+    "updated": "January 1, 2026",
+    "body": [
+      "This site provides information, articles, and contact options.",
+      "Use the site lawfully. Do not copy, resell, or misrepresent its content without permission.",
+      "Details may change as the project evolves."
+    ]
+  },
+  "cookies": {
+    "heading": "Cookie Policy",
+    "updated": "January 1, 2026",
+    "body": [
+      "Necessary cookies store your preferences and support basic site operation.",
+      "Optional marketing cookies stay disabled unless you grant consent. Cloudflare Zaraz integrations remain consent-gated."
+    ]
+  }
+}

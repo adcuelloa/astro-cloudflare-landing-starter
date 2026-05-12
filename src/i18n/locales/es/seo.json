@@ -1,0 +1,30 @@
+{
+  "home": {
+    "title": "Acme — Construye algo mejor",
+    "description": "Acme es una plantilla Astro lista para producción con i18n, colecciones de contenido, GSAP y SEO listo para Cloudflare."
+  },
+  "about": {
+    "title": "Nosotros — Acme",
+    "description": "Quiénes somos, qué construimos y por qué existe esta plantilla."
+  },
+  "blog": {
+    "title": "Blog — Acme",
+    "description": "Artículos, notas y tutoriales del equipo Acme."
+  },
+  "contact": {
+    "title": "Contacto — Acme",
+    "description": "Ponte en contacto con el equipo Acme."
+  },
+  "legalPrivacy": {
+    "title": "Política de privacidad — Acme",
+    "description": "Cómo Acme recopila, usa y protege los datos de los visitantes."
+  },
+  "legalTerms": {
+    "title": "Términos — Acme",
+    "description": "Términos de uso del sitio web de Acme."
+  },
+  "legalCookies": {
+    "title": "Política de cookies — Acme",
+    "description": "Cómo Acme usa cookies y analítica con consentimiento."
+  }
+}

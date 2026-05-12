@@ -1,0 +1,324 @@
+@import "tailwindcss";
+@import "vanilla-cookieconsent/dist/cookieconsent.css";
+@import "@fontsource-variable/manrope/wght.css";
+@import "@fontsource-variable/inter/wght.css";
+
+@theme {
+  /* ── Brand palette (oklch) ──
+   * Replace the hues below with your own. Keep one full primary ramp (50–900)
+   * and one compact accent ramp. Always use semantic tokens in components.
+   */
+
+  /* Primary — full 10-stop ramp (replace hue) */
+  --color-brand-50: oklch(0.98 0.018 240);
+  --color-brand-100: oklch(0.95 0.045 240);
+  --color-brand-200: oklch(0.9 0.075 240);
+  --color-brand-300: oklch(0.83 0.105 240);
+  --color-brand-400: oklch(0.75 0.13 240);
+  --color-brand-500: oklch(0.65 0.15 240);
+  --color-brand-600: oklch(0.56 0.15 244);
+  --color-brand-700: oklch(0.48 0.14 248);
+  --color-brand-800: oklch(0.38 0.12 252);
+  --color-brand-900: oklch(0.28 0.09 256);
+  --color-brand: var(--color-brand-500);
+
+  /* Accent — full 10-stop ramp (CTA / warm) */
+  --color-accent-50: oklch(0.98 0.02 85);
+  --color-accent-100: oklch(0.94 0.05 82);
+  --color-accent-200: oklch(0.9 0.09 80);
+  --color-accent-300: oklch(0.86 0.12 80);
+  --color-accent-400: oklch(0.82 0.14 78);
+  --color-accent-500: oklch(0.78 0.15 67);
+  --color-accent-600: oklch(0.7 0.15 62);
+  --color-accent-700: oklch(0.6 0.14 58);
+  --color-accent-800: oklch(0.48 0.13 54);
+  --color-accent-900: oklch(0.35 0.1 52);
+  --color-accent: var(--color-accent-500);
+
+  /* ── Neutrals ── */
+  --color-ink: oklch(0.22 0.035 252);
+  --color-ink-2: oklch(0.36 0.035 250);
+  --color-ink-3: oklch(0.5 0.03 248);
+  --color-line: oklch(0.91 0.025 235);
+  --color-line-2: oklch(0.84 0.035 235);
+  --color-bone: oklch(0.975 0.018 225);
+  --color-cream: oklch(0.995 0.004 225);
+  --color-paper: oklch(1 0 0);
+  --color-night: oklch(0.26 0.08 248);
+
+  /* ── Semantic tokens — prefer these in components ── */
+  --bg-page: var(--color-cream);
+  --bg-surface: var(--color-paper);
+  --bg-surface-2: var(--color-bone);
+  --bg-inverse: var(--color-night);
+
+  --fg-1: var(--color-ink);
+  --fg-2: var(--color-ink-2);
+  --fg-3: var(--color-ink-3);
+  --fg-on-color: oklch(1 0 0);
+  --fg-link: var(--color-brand-700);
+
+  --border-subtle: var(--color-line);
+  --border-strong: var(--color-line-2);
+
+  --accent-primary: var(--color-brand);
+  --accent-secondary: var(--color-accent);
+
+  --success: oklch(0.52 0.13 150);
+  --warning: oklch(0.6 0.14 75);
+  --danger: oklch(0.48 0.14 25);
+  --info: var(--color-brand-700);
+
+  /* ── Type ── */
+  --font-display: "Manrope Variable", system-ui, sans-serif;
+  --font-body: "Inter Variable", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  --fs-display: clamp(2.5rem, 7vw, 5.75rem);
+  --fs-h1: clamp(2rem, 4vw, 3.5rem);
+  --fs-h2: clamp(1.5rem, 3vw, 2.5rem);
+  --fs-h3: clamp(1.25rem, 2vw, 1.5rem);
+  --fs-h4: clamp(1.125rem, 1.5vw, 1.25rem);
+  --fs-lead: clamp(1.0625rem, 1.5vw, 1.25rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-caption: 0.75rem;
+
+  --lh-tight: 1.05;
+  --lh-snug: 1.2;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.65;
+
+  --tracking-tight: 0;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-caps: 0.08em;
+
+  /* ── Spacing (8pt) ── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ── Radii ── */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-xs: 0 1px 3px rgb(15 23 42 / 0.08), 0 1px 2px rgb(15 23 42 / 0.04);
+  --shadow-sm: 0 2px 8px rgb(15 23 42 / 0.1), 0 1px 3px rgb(15 23 42 / 0.06);
+  --shadow-md: 0 8px 24px rgb(15 23 42 / 0.12), 0 2px 6px rgb(15 23 42 / 0.06);
+  --shadow-lg: 0 20px 48px rgb(15 23 42 / 0.16), 0 4px 12px rgb(15 23 42 / 0.06);
+
+  /* ── Motion ── */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+  --dur-slow: 380ms;
+
+  /* ── Layout ── */
+  --container-narrow: 56rem;
+  --container: 72rem;
+  --container-wide: 80rem;
+}
+
+@layer base {
+  html,
+  body {
+    scroll-behavior: smooth;
+    background: var(--bg-page);
+    color: var(--fg-1);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: var(--tracking-normal);
+    line-height: var(--lh-snug);
+    text-wrap: balance;
+    color: var(--fg-1);
+  }
+
+  h1 {
+    font-size: var(--fs-h1);
+    line-height: var(--lh-tight);
+  }
+  h2 {
+    font-size: var(--fs-h2);
+  }
+  h3 {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+  }
+  h4 {
+    font-size: var(--fs-h4);
+    font-weight: 600;
+  }
+
+  p {
+    line-height: var(--lh-relaxed);
+    color: var(--fg-2);
+    text-wrap: pretty;
+  }
+
+  small {
+    font-size: var(--fs-caption);
+    color: var(--fg-3);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+
+  code,
+  pre {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+  }
+
+  ::selection {
+    background: var(--color-accent-100);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+}
+
+@layer components {
+  .display {
+    font-family: var(--font-display);
+    font-size: var(--fs-display);
+    line-height: var(--lh-tight);
+    font-weight: 800;
+    text-wrap: balance;
+  }
+
+  .eyebrow {
+    font-family: var(--font-display);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--color-accent-800);
+  }
+
+  .lead {
+    font-size: var(--fs-lead);
+    line-height: var(--lh-relaxed);
+    color: var(--fg-2);
+    text-wrap: pretty;
+  }
+
+  .caption {
+    font-size: var(--fs-caption);
+    color: var(--fg-3);
+  }
+
+  /* Card utility — surface + hairline + soft lift on hover */
+  .card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition:
+      box-shadow var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
+  }
+  .card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+  }
+
+  /* Prose */
+  .prose a {
+    color: var(--fg-link);
+    text-decoration: underline;
+  }
+  .prose a:hover {
+    color: var(--color-brand);
+  }
+  .prose h1,
+  .prose h2,
+  .prose h3 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .prose h1:first-child,
+  .prose h2:first-child,
+  .prose h3:first-child {
+    margin-top: 0;
+  }
+  .prose p {
+    margin-bottom: 1.1rem;
+  }
+  .prose ul,
+  .prose ol {
+    margin-bottom: 1.25rem;
+    padding-left: 1.25rem;
+  }
+  .prose li {
+    margin-bottom: 0.35rem;
+    color: var(--fg-2);
+  }
+}
+
+/* ── Cookie consent theme override ── */
+#cc-main.cc--theme {
+  --cc-font-family: var(--font-body);
+  --cc-modal-border-radius: var(--radius-md);
+  --cc-btn-border-radius: var(--radius-sm);
+  --cc-bg: var(--bg-surface);
+  --cc-primary-color: var(--fg-1);
+  --cc-secondary-color: var(--fg-2);
+  --cc-btn-primary-bg: var(--color-brand-700);
+  --cc-btn-primary-color: var(--fg-on-color);
+  --cc-btn-primary-hover-bg: var(--color-brand-800);
+  --cc-btn-secondary-bg: var(--color-brand-50);
+  --cc-btn-secondary-color: var(--color-brand-800);
+  --cc-btn-secondary-hover-bg: var(--color-brand-100);
+  --cc-separator-border-color: var(--border-subtle);
+  --cc-toggle-on-bg: var(--color-brand-700);
+  --cc-toggle-off-bg: var(--color-line-2);
+  --cc-cookie-category-block-bg: var(--color-brand-50);
+  --cc-cookie-category-block-border: var(--color-brand-100);
+  --cc-overlay-bg: oklch(0.18 0.045 252 / 0.58);
+  --cc-footer-bg: var(--color-brand-50);
+  --cc-footer-color: var(--fg-2);
+  color-scheme: light;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

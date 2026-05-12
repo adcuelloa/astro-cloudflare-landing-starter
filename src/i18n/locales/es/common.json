@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "ogImage": "og-image-es.jpg"
+  },
+  "brand": {
+    "name": "Acme",
+    "domain": "acme.example.com",
+    "email": "hello@acme.example.com",
+    "phone": "+1-000-000-0000"
+  },
+  "nav": {
+    "about": "Nosotros",
+    "blog": "Blog",
+    "contact": "Contacto"
+  },
+  "cta": {
+    "header": "Comenzar",
+    "mobile": "Inicio"
+  },
+  "labels": {
+    "learnMore": "Saber más",
+    "readMore": "Leer más",
+    "viewDetails": "Ver detalles",
+    "back": "Volver"
+  },
+  "skip": "Saltar al contenido principal",
+  "aria": {
+    "home": "Inicio de Acme",
+    "languagePicker": "Seleccionar idioma",
+    "mobileNav": "Navegación móvil",
+    "openMenu": "Abrir menú",
+    "primaryNav": "Navegación principal",
+    "switchLanguage": "Cambiar a",
+    "cookieSettings": "Abrir preferencias de cookies"
+  },
+  "footer": {
+    "description": "Una plantilla Astro lista para producción: i18n, colecciones de contenido, SEO, GSAP y analítica con consentimiento.",
+    "callLabel": "Llamar",
+    "emailLabel": "Correo",
+    "cookieSettings": "Preferencias de cookies",
+    "copyright": "Todos los derechos reservados.",
+    "columns": [
+      {
+        "title": "Sitio",
+        "items": [
+          { "label": "Nosotros", "route": "about" },
+          { "label": "Blog", "route": "blog" },
+          { "label": "Contacto", "route": "contact" }
+        ]
+      },
+      {
+        "title": "Legal",
+        "items": [
+          { "label": "Privacidad", "route": "legalPrivacy" },
+          { "label": "Términos", "route": "legalTerms" },
+          { "label": "Cookies", "route": "legalCookies" }
+        ]
+      }
+    ]
+  }
+}

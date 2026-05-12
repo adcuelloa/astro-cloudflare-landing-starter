@@ -1,0 +1,21 @@
+{
+  "recommendations": [
+    "oxc.oxc-vscode",
+    "editorconfig.editorconfig",
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+    "mikestead.dotenv",
+    "usernamehw.errorlens",
+    "clinyong.vscode-css-modules",
+    "wix.vscode-import-cost",
+    "yzhang.markdown-all-in-one",
+    "astro-build.astro-vscode",
+    "christian-kohler.npm-intellisense",
+    "midudev.better-svg",
+    "lokalise.i18n-ally",
+    "kisstkondoros.vscode-gutter-preview",
+    "typescriptteam.native-preview",
+    "pflannery.vscode-versionlens"
+  ]
+}

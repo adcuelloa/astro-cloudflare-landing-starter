@@ -1,0 +1,10 @@
+{
+  "eyebrow": "Blog",
+  "heading": "Notas del equipo.",
+  "lead": "Artículos y tutoriales sobre Astro, rendimiento web y los patrones que esta plantilla codifica.",
+  "readLabel": "lectura",
+  "backToList": "Todos los artículos",
+  "publishedOn": "Publicado el ",
+  "breadcrumb": "Blog",
+  "empty": "Aún no hay artículos publicados."
+}

@@ -1,0 +1,92 @@
+---
+import { Mail, Phone } from "@lucide/astro";
+import BrandMark from "@/components/icons/BrandMark.astro";
+import { getLangFromUrl, useTranslations } from "@/i18n/utils";
+import { type Locale, localizedPath, type RouteKey } from "@/i18n/slugs";
+
+const lang = getLangFromUrl(Astro.url) as Locale;
+const t = useTranslations(lang);
+
+type FooterItem = { label: string; route: string };
+type FooterColumn = { items: FooterItem[]; title: string };
+
+const cols = t("common.footer.columns") as FooterColumn[];
+const year = new Date().getFullYear();
+---
+
+<footer
+  transition:name="site-footer"
+  class="relative overflow-hidden border-t border-slate-200 bg-white py-12 text-slate-800 sm:py-16"
+>
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
+    <div class="mb-10 grid grid-cols-1 gap-8 sm:mb-14 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
+      <div>
+        <a
+          href={localizedPath(lang, "home")}
+          class="text-brand-800 inline-flex items-center gap-3 no-underline"
+          aria-label={t("common.aria.home")}
+        >
+          <BrandMark class="h-10 w-10" />
+          <span class="font-display text-2xl font-extrabold tracking-normal">
+            {t("common.brand.name")}
+          </span>
+        </a>
+        <p class="mt-4 max-w-72 text-sm leading-relaxed text-slate-600">
+          {t("common.footer.description")}
+        </p>
+        <div class="mt-5 flex gap-3">
+          <a
+            href={`tel:${t("common.brand.phone")}`}
+            class="text-brand-800 hover:border-brand-500 hover:bg-brand-50 flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 no-underline transition-colors"
+            aria-label={t("common.footer.callLabel")}
+          >
+            <Phone size={16} stroke-width={1.75} aria-hidden="true" />
+          </a>
+          <a
+            href={`mailto:${t("common.brand.email")}`}
+            class="text-brand-800 hover:border-brand-500 hover:bg-brand-50 flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 no-underline transition-colors"
+            aria-label={t("common.footer.emailLabel")}
+          >
+            <Mail size={16} stroke-width={1.75} aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+
+      {
+        cols.map((col) => (
+          <div>
+            <div class="font-display text-brand-800 mb-3 text-xs font-bold tracking-normal uppercase sm:mb-4">
+              {col.title}
+            </div>
+            <ul class="space-y-2">
+              {col.items.map((item) => (
+                <li>
+                  <a
+                    href={localizedPath(lang, item.route as RouteKey)}
+                    class="hover:text-brand-800 text-sm text-slate-600 no-underline transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div
+      class="flex flex-col flex-wrap justify-between gap-3 border-t border-slate-200 pt-6 text-xs text-slate-500 sm:flex-row"
+    >
+      <span>© {year} {t("common.brand.name")}. {t("common.footer.copyright")}</span>
+      <button
+        type="button"
+        data-cookie-settings
+        class="text-brand-700 hover:text-brand-600 cursor-pointer text-left underline-offset-4 hover:underline"
+        aria-label={t("common.aria.cookieSettings")}
+      >
+        {t("common.footer.cookieSettings")}
+      </button>
+    </div>
+  </div>
+</footer>
