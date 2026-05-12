@@ -10,10 +10,12 @@ const { class: className, title } = Astro.props;
   xmlns="http://www.w3.org/2000/svg"
   viewBox="0 0 64 64"
   fill="none"
-  role="img"
-  aria-label={title}
+  role={title ? "img" : undefined}
+  aria-hidden={title ? undefined : "true"}
+  focusable="false"
   class={className}
 >
+  {title ? <title>{title}</title> : null}
   <rect width="64" height="64" rx="14" fill="currentColor" opacity="0.08"></rect>
   <path
     d="M16 44V20l16 16L48 20v24"
