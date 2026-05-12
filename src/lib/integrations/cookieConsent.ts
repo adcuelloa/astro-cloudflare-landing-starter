@@ -5,17 +5,20 @@
  * Usage:
  *  - Import and call `initCookieConsent()` once from Layout.astro.
  *  - Place a `data-cookie-settings` attribute on any element (button/link) to
- *    open the preferences modal — the helper auto-binds them after init.
+ *    open the preferences modal — the helper handles clicks with delegated listeners.
  */
 
-import { run as runCookieConsent, showPreferences } from "vanilla-cookieconsent";
+import { run as runCookieConsent, setLanguage, showPreferences } from "vanilla-cookieconsent";
 
 import { syncZarazConsent } from "@/lib/integrations/zaraz";
 
 let started = false;
+let cookieConsentReady: Promise<void> | null = null;
+let activeLanguage: "en" | "es" | null = null;
+let settingsListenerBound = false;
 
-function getDocumentLanguage(): "en" | "es" {
-  return document.documentElement.lang === "en" ? "en" : "es";
+function getPageLanguage(): "en" | "es" {
+  return window.location.pathname.split("/").filter(Boolean)[0] === "es" ? "es" : "en";
 }
 
 /** Re-apply theme class to the consent root if it appears late. */
@@ -26,10 +29,16 @@ function styleConsentRoot(): void {
 export function initCookieConsent(): void {
   if (typeof document === "undefined" || started) return;
   started = true;
+  activeLanguage = getPageLanguage();
+  document.documentElement.lang = activeLanguage;
 
-  void runCookieConsent({
+  initCookieSettingsListener();
+
+  cookieConsentReady = runCookieConsent({
     mode: "opt-in",
     autoShow: true,
+    lazyHtmlGeneration: false,
+    root: "#cookie-consent-root",
     onConsent: ({ cookie }) => {
       syncZarazConsent(cookie.categories.includes("marketing"));
     },
@@ -71,7 +80,7 @@ export function initCookieConsent(): void {
       },
     },
     language: {
-      default: getDocumentLanguage(),
+      default: activeLanguage,
       translations: {
         en: {
           consentModal: {
@@ -156,19 +165,48 @@ export function initCookieConsent(): void {
     },
   }).then(() => {
     styleConsentRoot();
-    bindCookieSettingsLinks();
+    void syncCookieConsentPage();
   });
 
-  document.addEventListener("astro:page-load", bindCookieSettingsLinks);
+  document.addEventListener("astro:page-load", () => {
+    void syncCookieConsentPage();
+  });
 }
 
-function bindCookieSettingsLinks(): void {
+async function syncCookieConsentPage(): Promise<void> {
+  await cookieConsentReady;
+
+  const nextLanguage = getPageLanguage();
+  document.documentElement.lang = nextLanguage;
+
+  if (activeLanguage !== nextLanguage) {
+    activeLanguage = nextLanguage;
+    await setLanguage(nextLanguage, true);
+    styleConsentRoot();
+  }
+
+  syncCookieSettingsButtons();
+}
+
+function syncCookieSettingsButtons(): void {
   document.querySelectorAll<HTMLElement>("[data-cookie-settings]").forEach((el) => {
-    if (el.dataset.cookieBound === "1") return;
-    el.dataset.cookieBound = "1";
-    el.addEventListener("click", (e) => {
-      e.preventDefault();
-      showPreferences();
-    });
+    el.setAttribute("aria-haspopup", "dialog");
+  });
+}
+
+function initCookieSettingsListener(): void {
+  if (settingsListenerBound) return;
+  settingsListenerBound = true;
+
+  document.addEventListener("click", async (e) => {
+    const target = e.target;
+    if (!(target instanceof Element)) return;
+
+    const el = target.closest<HTMLElement>("[data-cookie-settings]");
+    if (!el) return;
+
+    e.preventDefault();
+    await syncCookieConsentPage();
+    showPreferences();
   });
 }
