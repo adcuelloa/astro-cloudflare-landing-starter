@@ -11,6 +11,7 @@
 import { run as runCookieConsent, setLanguage, showPreferences } from "vanilla-cookieconsent";
 
 import { syncZarazConsent } from "@/lib/integrations/zaraz";
+import { $$ } from "../dom-selector";
 
 let started = false;
 let cookieConsentReady: Promise<void> | null = null;
@@ -189,7 +190,7 @@ async function syncCookieConsentPage(): Promise<void> {
 }
 
 function syncCookieSettingsButtons(): void {
-  document.querySelectorAll<HTMLElement>("[data-cookie-settings]").forEach((el) => {
+  $$<HTMLElement>("[data-cookie-settings]").forEach((el) => {
     el.setAttribute("aria-haspopup", "dialog");
   });
 }

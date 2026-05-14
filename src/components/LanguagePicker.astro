@@ -65,6 +65,7 @@ const supported = Object.keys(languages) as (keyof typeof ui)[];
   // to find the localized URL for the target language. If no alternates exist
   // (e.g. localized page not built), falls back to language-root navigation.
   import { navigate } from "astro:transitions/client";
+  import { $,$$ } from "@/lib/dom-selector";
 
   let pickerController: AbortController | null = null;
   let lifecycleBound = false;
@@ -77,25 +78,23 @@ const supported = Object.keys(languages) as (keyof typeof ui)[];
   function init() {
     cleanup();
 
-    document.querySelectorAll<HTMLElement>("[data-lang-pill]").forEach((pill) => {
+    $$("[data-lang-pill]").forEach((pill) => {
       const controller = new AbortController();
       pickerController = controller;
       const currentLang = pill.dataset.currentLang ?? "en";
       const defaultLang = pill.dataset.defaultLang ?? "en";
 
-      const hasAlternates = document.querySelector('link[rel="alternate"][hreflang]') !== null;
+      const hasAlternates = $('link[rel="alternate"][hreflang]') !== null;
       pill.classList.toggle("hidden", !hasAlternates);
 
-      pill.querySelectorAll<HTMLButtonElement>("button[data-lang]").forEach((btn) => {
+      $$<HTMLButtonElement>("button[data-lang]", pill).forEach((btn) => {
         btn.addEventListener(
           "click",
           () => {
             const targetLang = btn.dataset.lang ?? "";
             if (targetLang === currentLang) return;
 
-            const alt = document.querySelector<HTMLLinkElement>(
-              `link[rel="alternate"][hreflang="${targetLang}"]`
-            );
+            const alt = $<HTMLLinkElement>('link[rel="alternate"][hreflang="${targetLang}"]');
             if (alt?.href) {
               const url = new URL(alt.href);
               navigate(url.pathname);

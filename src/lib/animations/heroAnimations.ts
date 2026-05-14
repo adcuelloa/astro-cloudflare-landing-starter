@@ -3,6 +3,7 @@
  * inside `[data-hero]`. Reuses across pages and cleans up on view transitions.
  */
 import gsap from "gsap";
+import { $, $$ } from "@/lib/dom-selector";
 
 let ctx: gsap.Context | null = null;
 let activeRoot: HTMLElement | null = null;
@@ -15,7 +16,7 @@ export function cleanupHeroAnimations(): void {
 }
 
 export function initHeroAnimations(): void {
-  const root = document.querySelector<HTMLElement>("[data-hero]");
+  const root = $("[data-hero]");
   if (!root) {
     cleanupHeroAnimations();
     return;
@@ -26,7 +27,7 @@ export function initHeroAnimations(): void {
   cleanupHeroAnimations();
   activeRoot = root;
 
-  const revealTargets = Array.from(root.querySelectorAll<HTMLElement>("[data-hero-reveal]"));
+  const revealTargets = Array.from($$("[data-hero-reveal]", root));
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     gsap.set(revealTargets, { clearProps: "all" });
     return;
