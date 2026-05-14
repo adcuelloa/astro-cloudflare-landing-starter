@@ -65,7 +65,7 @@ const supported = Object.keys(languages) as (keyof typeof ui)[];
   // to find the localized URL for the target language. If no alternates exist
   // (e.g. localized page not built), falls back to language-root navigation.
   import { navigate } from "astro:transitions/client";
-  import { $,$$ } from "@/lib/dom-selector";
+  import { $, $$ } from "@/lib/dom-selector";
 
   let pickerController: AbortController | null = null;
   let lifecycleBound = false;
@@ -78,9 +78,10 @@ const supported = Object.keys(languages) as (keyof typeof ui)[];
   function init() {
     cleanup();
 
+    const controller = new AbortController();
+    pickerController = controller;
+
     $$("[data-lang-pill]").forEach((pill) => {
-      const controller = new AbortController();
-      pickerController = controller;
       const currentLang = pill.dataset.currentLang ?? "en";
       const defaultLang = pill.dataset.defaultLang ?? "en";
 
@@ -94,10 +95,10 @@ const supported = Object.keys(languages) as (keyof typeof ui)[];
             const targetLang = btn.dataset.lang ?? "";
             if (targetLang === currentLang) return;
 
-            const alt = $<HTMLLinkElement>('link[rel="alternate"][hreflang="${targetLang}"]');
+            const alt = $<HTMLLinkElement>(`link[rel="alternate"][hreflang="${targetLang}"]`);
             if (alt?.href) {
               const url = new URL(alt.href);
-              navigate(url.pathname);
+              navigate(`${url.pathname}${url.search}${url.hash}`);
               return;
             }
             navigate(targetLang === defaultLang ? "/" : `/${targetLang}`);

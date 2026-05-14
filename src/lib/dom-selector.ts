@@ -9,11 +9,11 @@
  */
 export const $ = <T extends HTMLElement>(
   selector: string,
-  context: Document | HTMLElement = document,
+  context: Document | HTMLElement = document
 ) => {
-  const element = context.querySelector<T>(selector)
-  return element
-}
+  const element = context.querySelector<T>(selector);
+  return element;
+};
 
 /**
  * Get elements from dom by selector string
@@ -25,8 +25,8 @@ export const $ = <T extends HTMLElement>(
  */
 export const $$ = <T extends HTMLElement>(
   selector: string,
-  context: Document | HTMLElement = document,
+  context: Document | HTMLElement = document
 ) => {
-  const elements = context.querySelectorAll<T>(selector)
-  return elements
-}
+  const elements = context.querySelectorAll<T>(selector);
+  return elements;
+};
