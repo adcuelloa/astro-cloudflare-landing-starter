@@ -37,6 +37,10 @@ export default defineConfig({
   site: siteUrl,
   output: "static",
   trailingSlash: "never",
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "viewport",
+  },
   integrations: [sitemap()],
   image: {
     domains: [cdnHostname],
