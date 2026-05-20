@@ -2,7 +2,9 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["import"],
   "categories": {
-    "correctness": "off"
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
   },
   "env": {
     "es2024": true,
@@ -18,68 +20,12 @@
     "**/logs/**",
     "**/*.log",
     "**/.env*",
-    "**/.astro/**"
+    "**/.astro/**",
+    ".claude/**",
+    ".agents/**"
   ],
 
   "rules": {
-    // ── ESLint recommended (js.configs.recommended equivalent) ──────────────
-    "constructor-super": "error",
-    "for-direction": "error",
-    "no-async-promise-executor": "error",
-    "no-case-declarations": "error",
-    "no-class-assign": "error",
-    "no-compare-neg-zero": "error",
-    "no-cond-assign": "error",
-    "no-const-assign": "error",
-    "no-constant-binary-expression": "error",
-    "no-constant-condition": "error",
-    "no-control-regex": "error",
-    "no-delete-var": "error",
-    "no-dupe-class-members": "error",
-    "no-dupe-else-if": "error",
-    "no-dupe-keys": "error",
-    "no-duplicate-case": "error",
-    "no-empty": "error",
-    "no-empty-character-class": "error",
-    "no-empty-pattern": "error",
-    "no-empty-static-block": "error",
-    "no-ex-assign": "error",
-    "no-extra-boolean-cast": "error",
-    "no-fallthrough": "error",
-    "no-func-assign": "error",
-    "no-global-assign": "error",
-    "no-import-assign": "error",
-    "no-invalid-regexp": "error",
-    "no-irregular-whitespace": "error",
-    "no-loss-of-precision": "error",
-    "no-misleading-character-class": "error",
-    "no-new-native-nonconstructor": "error",
-    "no-nonoctal-decimal-escape": "error",
-    "no-obj-calls": "error",
-    "no-prototype-builtins": "error",
-    "no-redeclare": "error",
-    "no-regex-spaces": "error",
-    "no-self-assign": "error",
-    "no-setter-return": "error",
-    "no-shadow-restricted-names": "error",
-    "no-sparse-arrays": "error",
-    "no-this-before-super": "error",
-    "no-unassigned-vars": "error",
-    "no-unsafe-finally": "error",
-    "no-unsafe-negation": "error",
-    "no-unsafe-optional-chaining": "error",
-    "no-unused-labels": "error",
-    "no-unused-private-class-members": "error",
-    "no-useless-backreference": "error",
-    "no-useless-catch": "error",
-    "no-useless-escape": "error",
-    "no-with": "error",
-    "preserve-caught-error": "error",
-    "require-yield": "error",
-    "use-isnan": "error",
-    "valid-typeof": "error",
-
-    // ── Custom rules ─────────────────────────────────────────────────────────
     "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
     "no-debugger": "warn",
     // no-unused-vars disabled globally — TypeScript override below handles it
@@ -96,18 +42,24 @@
       }
     ],
 
+    // Allow unassigned imports for side effects (e.g. polyfills, CSS)
+    "import/no-unassigned-import": "off",
+
     // ── Import plugin rules ──────────────────────────────────────────────────
     "import/no-duplicates": "error",
     "import/first": "error",
     "import/no-absolute-path": "error",
     // import/no-cycle is available but disabled: builds full dep graph → OOM on 8 GB RAM
-    "import/no-cycle": "off"
+    "import/no-cycle": "off",
+
+    // ── React Doctor: security (all files) ───────────────────────────────────
+    "react-doctor/no-eval": "error"
   },
 
   "overrides": [
     // ── TypeScript files ─────────────────────────────────────────────────────
     {
-      "files": ["**/*.{ts,tsx,d.ts}"],
+      "files": ["**/*.{ts,tsx,d.ts,astro}"],
       "plugins": ["typescript"],
       "rules": {
         // From @typescript-eslint/recommended
