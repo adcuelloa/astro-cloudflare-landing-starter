@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/syncpack/schema.json",
+  "indent": "  ",
+  "source": ["package.json"],
+  "sortFirst": [
+    "name",
+    "version",
+    "private",
+    "description",
+    "license",
+    "type",
+    "sideEffects",
+    "main",
+    "module",
+    "types",
+    "exports",
+    "scripts"
+  ]
+}

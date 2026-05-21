@@ -2,14 +2,16 @@
   "name": "astro-cloudflare-starter",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "description": "Cloudflare Pages static-first Astro 6 starter with i18n, content collections, GSAP, Zaraz consent analytics, Cloudflare image transformations, Pages Functions guidance, and SEO helpers.",
+  "type": "module",
   "scripts": {
     "astro": "astro",
     "build": "astro build",
     "dev": "astro dev",
     "fmt": "oxfmt",
+    "fmt:deps": "syncpack format",
     "lint": "oxlint --type-aware .",
+    "lint:deps": "syncpack lint",
     "preview": "astro preview",
     "seo:audit": "node scripts/seo-audit.mjs",
     "type-check": "oxlint --type-aware --type-check ."
@@ -34,6 +36,7 @@
     "oxfmt": "0.51.0",
     "oxlint": "1.66.0",
     "oxlint-tsgolint": "0.23.0",
+    "syncpack": "15.3.1",
     "tailwindcss": "4.3.0",
     "typescript": "6.0.3",
     "wrangler": "4.93.0"
