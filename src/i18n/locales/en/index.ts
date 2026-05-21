@@ -1,8 +1,8 @@
-import common from "./common.json";
-import home from "./home.json";
-import blog from "./blog.json";
 import about from "./about.json";
+import blog from "./blog.json";
+import common from "./common.json";
 import contact from "./contact.json";
+import home from "./home.json";
 import legal from "./legal.json";
 import seo from "./seo.json";
 

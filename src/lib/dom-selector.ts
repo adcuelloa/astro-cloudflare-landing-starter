@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
 /**
  * Get element from dom by selector string
  * @example
@@ -7,10 +8,10 @@
  * @param context
  * @returns  HTMLElement
  */
-export const $ = <T extends HTMLElement>(
+export const $ = <T extends Element = HTMLElement>(
   selector: string,
-  context: Document | HTMLElement = document
-) => {
+  context: ParentNode = document
+): T | null => {
   const element = context.querySelector<T>(selector);
   return element;
 };
@@ -23,10 +24,10 @@ export const $ = <T extends HTMLElement>(
  * @param context
  * @returns  NodeList
  */
-export const $$ = <T extends HTMLElement>(
+export const $$ = <T extends Element = HTMLElement>(
   selector: string,
-  context: Document | HTMLElement = document
-) => {
+  context: ParentNode = document
+): NodeListOf<T> => {
   const elements = context.querySelectorAll<T>(selector);
   return elements;
 };

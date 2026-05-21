@@ -1,0 +1,54 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": false,
+  "quoteProps": "as-needed",
+  "jsxSingleQuote": false,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "embeddedLanguageFormatting": "auto",
+  "singleAttributePerLine": false,
+  "sortTailwindcss": {},
+  "sortPackageJson": false,
+  "sortImports": {
+    "newlinesBetween": true,
+    "order": "asc",
+    "ignoreCase": true,
+    "customGroups": [
+      {
+        "groupName": "app-aliases",
+        "elementNamePattern": ["@/**"]
+      }
+    ],
+    "groups": [
+      "side_effect",
+      "builtin",
+      "external",
+      "app-aliases",
+      ["parent", "sibling", "index"],
+      "style",
+      "unknown"
+    ]
+  },
+  "ignorePatterns": [
+    ".agents/**",
+    ".claude/**",
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    ".turbo",
+    ".vite",
+    "pnpm-lock.yaml",
+    "package-lock.json",
+    "yarn.lock",
+    "**/snapshot.json",
+    "skills-lock.json"
+  ]
+}

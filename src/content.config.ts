@@ -1,6 +1,6 @@
-import { defineCollection, reference } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
+import { defineCollection, reference } from "astro:content";
 
 /**
  * Content collections.

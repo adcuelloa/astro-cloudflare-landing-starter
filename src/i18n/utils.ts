@@ -1,6 +1,7 @@
 import { defaultLang, ui } from "./ui";
 
 type LocaleSchema = (typeof ui)[typeof defaultLang];
+type UiLocale = keyof typeof ui;
 
 type Primitive = string | number | boolean | null;
 
@@ -31,10 +32,14 @@ export function getLangFromUrl(url: URL) {
 
   for (const seg of segments) {
     const candidate = seg.replace(/\.html$/, "");
-    if (candidate in ui) return candidate as keyof typeof ui;
+    if (isUiLocale(candidate)) return candidate;
   }
 
   return defaultLang;
+}
+
+function isUiLocale(value: string): value is UiLocale {
+  return value in ui;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -49,13 +54,14 @@ function getByPath(obj: unknown, path: string): unknown {
   }, obj);
 }
 
-export function useTranslations(lang: keyof typeof ui) {
+export function useTranslations(lang: UiLocale) {
   return function t<K extends TranslationKey>(key: K): PathValue<LocaleSchema, K> {
     const langLocales = ui[lang] ?? ui[defaultLang];
     const defaultLocales = ui[defaultLang];
 
     const value = getByPath(langLocales, key) ?? getByPath(defaultLocales, key) ?? "";
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     return value as PathValue<LocaleSchema, K>;
   };
 }

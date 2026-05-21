@@ -8,11 +8,11 @@
     "astro": "astro",
     "build": "astro build",
     "dev": "astro dev",
-    "fmt": "prettier --write .",
-    "lint": "oxlint",
+    "fmt": "oxfmt",
+    "lint": "oxlint --type-aware .",
     "preview": "astro preview",
     "seo:audit": "node scripts/seo-audit.mjs",
-    "type-check": "astro check"
+    "type-check": "oxlint --type-aware --type-check ."
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.2",
@@ -31,8 +31,9 @@
     "@astrojs/check": "0.9.9",
     "@tailwindcss/vite": "4.3.0",
     "@types/node": "25.9.1",
+    "oxfmt": "0.51.0",
     "oxlint": "1.66.0",
-    "prettier": "3.8.3",
+    "oxlint-tsgolint": "0.23.0",
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-tailwindcss": "0.8.0",
     "tailwindcss": "4.3.0",

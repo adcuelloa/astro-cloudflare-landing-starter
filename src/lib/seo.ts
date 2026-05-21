@@ -1,6 +1,6 @@
 import type { Locale } from "@/i18n/slugs";
-import { entrySlug } from "@/lib/contentRouting";
 import { ui } from "@/i18n/ui";
+import { entrySlug } from "@/lib/contentRouting";
 
 /**
  * SEO helpers — one source of truth for titles, descriptions, OG/Twitter cards,

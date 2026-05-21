@@ -50,14 +50,10 @@
     "import/first": "error",
     "import/no-absolute-path": "error",
     // import/no-cycle is available but disabled: builds full dep graph → OOM on 8 GB RAM
-    "import/no-cycle": "off",
-
-    // ── React Doctor: security (all files) ───────────────────────────────────
-    "react-doctor/no-eval": "error"
+    "import/no-cycle": "off"
   },
 
   "overrides": [
-    // ── TypeScript files ─────────────────────────────────────────────────────
     {
       "files": ["**/*.{ts,tsx,d.ts,astro}"],
       "plugins": ["typescript"],

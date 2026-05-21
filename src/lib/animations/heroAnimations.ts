@@ -3,6 +3,7 @@
  * inside `[data-hero]`. Reuses across pages and cleans up on view transitions.
  */
 import gsap from "gsap";
+
 import { $, $$ } from "@/lib/dom-selector";
 
 let ctx: gsap.Context | null = null;

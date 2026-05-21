@@ -16,11 +16,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 const REVEAL_SELECTOR = "[data-reveal]";
 
-type HomeAnimationConditions = {
-  desktop?: boolean;
-  reduceMotion?: boolean;
-};
-
 let mm: gsap.MatchMedia | null = null;
 let listenersBound = false;
 
@@ -52,7 +47,8 @@ export function initHomeAnimations(): void {
       reduceMotion: "(prefers-reduced-motion: reduce)",
     },
     (context) => {
-      const { desktop, reduceMotion } = context.conditions as HomeAnimationConditions;
+      const desktop = context.conditions?.desktop === true;
+      const reduceMotion = context.conditions?.reduceMotion === true;
       if (reduceMotion) {
         gsap.set(revealTargets, { clearProps: "all" });
         return;
