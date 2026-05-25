@@ -16,7 +16,7 @@ const cdnBaseUrl = (import.meta.env.PUBLIC_CDN_URL ?? "https://cdn.acme.example.
   ""
 );
 
-const sortedPosts = (await getCollection("blog", ({ id }) => id.startsWith("es/"))).sort(
+const sortedPosts = (await getCollection("blog", ({ id }) => id.startsWith("es/"))).toSorted(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 

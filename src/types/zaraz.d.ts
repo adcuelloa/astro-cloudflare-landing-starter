@@ -7,7 +7,7 @@
  * @see https://developers.cloudflare.com/zaraz/consent-management/api/
  */
 
-interface ZarazConsent {
+export interface ZarazConsent {
   /** Set consent for ALL purposes at once. */
   setAll(value: boolean): void;
   /** Set consent for a single purpose by its dashboard ID. */
@@ -20,7 +20,7 @@ interface ZarazConsent {
   APIReady: boolean;
 }
 
-interface Zaraz {
+export interface Zaraz {
   /**
    * Track a custom event. Event names map to triggers in the Zaraz dashboard.
    * @see https://developers.cloudflare.com/zaraz/web-api/track/
@@ -49,5 +49,3 @@ declare global {
     zaraz?: Zaraz;
   }
 }
-
-export {};

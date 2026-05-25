@@ -20,7 +20,7 @@ let activeLanguage: "en" | "es" | null = null;
 let settingsListenerBound = false;
 
 function getPageLanguage(): "en" | "es" {
-  return window.location.pathname.split("/").filter(Boolean)[0] === "es" ? "es" : "en";
+  return window.location.pathname.split("/").find(Boolean) === "es" ? "es" : "en";
 }
 
 /** Re-apply theme class to the consent root if it appears late. */

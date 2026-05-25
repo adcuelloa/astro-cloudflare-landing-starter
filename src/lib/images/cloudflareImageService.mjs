@@ -70,7 +70,7 @@ function targetDimensions(options) {
 }
 
 function srcSetValues(options) {
-  const widths = [...(options.widths ?? [])].sort((a, b) => a - b);
+  const widths = [...(options.widths ?? [])].toSorted((a, b) => a - b);
   const { width, height } = targetDimensions(options);
 
   if (widths.length === 0 || typeof width !== "number" || typeof height !== "number") {
