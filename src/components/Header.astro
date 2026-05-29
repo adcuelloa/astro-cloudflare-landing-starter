@@ -171,11 +171,11 @@ const navItems: Array<{ route: RouteKey; label: string }> = [
     onScroll();
   }
 
-  initHeader();
-
   if (!lifecycleBound) {
     lifecycleBound = true;
     document.addEventListener("astro:before-swap", cleanupHeader);
+    // astro:page-load also runs on first paint — initHeader() is only registered
+    // here so we do not double-call syncAuthState() and hit get-session twice.
     document.addEventListener("astro:page-load", initHeader);
   }
 </script>
