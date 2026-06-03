@@ -149,13 +149,13 @@ Follow the repo rules in `CLAUDE.md`:
 
 For a pure one-page landing, consider removing:
 
-| Remove                | Files/areas                                                                 |
-| --------------------- | --------------------------------------------------------------------------- |
-| Blog                  | `src/pages/blog/`, `src/pages/es/blog/`, `src/content/blog/`, blog nav keys |
-| Legal nav links       | Header/Footer links only; keep legal pages if the business needs them       |
-| Cookie banner + Zaraz | `src/lib/integrations/`, related `Layout.astro` scripts and CSS             |
-| Spanish locale        | `src/pages/es/`, `src/i18n/locales/es/`, locale config and routes           |
-| GSAP scroll animation | `src/lib/animations/`, imports, `data-reveal` hooks                         |
+| Remove                | Files/areas                                                                      |
+| --------------------- | -------------------------------------------------------------------------------- |
+| Blog                  | `src/pages/blog/`, `src/pages/es/blog/`, `src/content/blog/`, blog nav keys      |
+| Legal nav links       | Header/Footer links only; keep legal pages if the business needs them            |
+| Cookie banner + Zaraz | `src/lib/integrations/`, related `Layout.astro` scripts and CSS                  |
+| Spanish locale        | `src/pages/es/`, `src/i18n/locales/es/`, locale config and routes                |
+| GSAP scroll animation | `src/lib/animations/`, related `Layout.astro` import, `data-scroll-reveal` hooks |
 
 Do not remove bilingual support, legal pages, or consent tooling blindly if the
 landing will run paid traffic or collect user data.

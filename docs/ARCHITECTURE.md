@@ -84,10 +84,9 @@ animation module must:
 4. Use a module-level `listenersBound` flag to avoid double-binding when the
    script tag re-runs.
 
-See `lib/animations/pages/home.ts` for the canonical pattern. The
-`isHomeRoute()` guard short-circuits the script when the user navigates to
-another page — important because the script tag in `index.astro` re-imports
-on every transition.
+See `lib/animations/scrollReveal.ts` for the canonical ScrollTrigger pattern.
+It is imported once from `Layout.astro`, so any page can opt in with
+`data-scroll-reveal` while the module still cleans up across view transitions.
 
 ## DOM cleanup pattern (Header, LanguagePicker)
 

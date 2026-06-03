@@ -322,3 +322,26 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Pre-hide GSAP reveal targets until JS runs gsap.set (avoids visible -> hide flash).
+   .js is set by Layout's inline script; without JS, content stays visible. */
+.js [data-scroll-reveal] {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(22px);
+}
+
+.js [data-hero-reveal] {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(18px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-scroll-reveal],
+  .js [data-hero-reveal] {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+}

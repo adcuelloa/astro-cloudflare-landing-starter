@@ -6,7 +6,12 @@ import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
 import { defaultLang, languages } from "@/i18n/ui";
 import { getLangFromUrl, useTranslations } from "@/i18n/utils";
-import { jsonLdScript, organizationSchema, type SeoMeta, SITE_CONFIG } from "@/lib/seo";
+import {
+  jsonLdScript,
+  organizationSchema,
+  type SeoMeta,
+  SITE_CONFIG,
+} from "@/lib/seo";
 
 interface Props {
   title?: string;
@@ -23,10 +28,9 @@ const { seo }: Props = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const cdnBaseUrl = (import.meta.env.PUBLIC_CDN_URL ?? "https://cdn.acme.example.com").replace(
-  /\/+$/,
-  ""
-);
+const cdnBaseUrl = (
+  import.meta.env.PUBLIC_CDN_URL ?? "https://cdn.acme.example.com"
+).replace(/\/+$/, "");
 const siteUrlObj = Astro.site ?? new URL(SITE_CONFIG.url);
 const title = seo?.title ?? Astro.props.title ?? SITE_CONFIG.name;
 const description = seo?.description ?? Astro.props.description ?? "";
@@ -35,17 +39,21 @@ const canonicalUrl = seo?.canonicalUrl ?? Astro.props.canonicalUrl;
 const alternates = seo?.alternates ?? Astro.props.alternates;
 
 // Normalize Astro static build paths like `/page/index.html` → `/page`.
-const normalizedPathname = Astro.url.pathname.replace(/\/index\.html$/, "/").replace(/\.html$/, "");
+const normalizedPathname = Astro.url.pathname
+  .replace(/\/index\.html$/, "/")
+  .replace(/\.html$/, "");
 const resolvedCanonical = noindex
   ? undefined
   : (canonicalUrl ?? new URL(normalizedPathname, siteUrlObj).href);
 const ogUrl = resolvedCanonical ?? new URL(normalizedPathname, siteUrlObj).href;
 
-const ogImageUrl = seo?.image?.url ?? `${cdnBaseUrl}/${t("common.meta.ogImage")}`;
+const ogImageUrl =
+  seo?.image?.url ?? `${cdnBaseUrl}/${t("common.meta.ogImage")}`;
 
 const hreflangLinks = alternates ?? [];
 const xDefaultHref =
-  hreflangLinks.find((a) => a.hreflang === defaultLang)?.href ?? resolvedCanonical;
+  hreflangLinks.find((a) => a.hreflang === defaultLang)?.href ??
+  resolvedCanonical;
 
 const ogLocaleMap: Record<string, string> = { es: "es_419", en: "en_US" };
 const ogLocale = ogLocaleMap[lang] ?? "en_US";
@@ -77,7 +85,11 @@ const jsonLdString = jsonLdScript([
     <meta name="description" content={description} />
     <meta name="author" content={SITE_CONFIG.author} />
 
-    {resolvedCanonical ? <link rel="canonical" href={resolvedCanonical} /> : null}
+    {
+      resolvedCanonical ? (
+        <link rel="canonical" href={resolvedCanonical} />
+      ) : null
+    }
 
     {
       !noindex &&
@@ -85,16 +97,28 @@ const jsonLdString = jsonLdScript([
           <link rel="alternate" hreflang={hreflang} href={href} />
         ))
     }
-    {!noindex && xDefaultHref && <link rel="alternate" hreflang="x-default" href={xDefaultHref} />}
+    {
+      !noindex && xDefaultHref && (
+        <link rel="alternate" hreflang="x-default" href={xDefaultHref} />
+      )
+    }
 
     <meta property="og:type" content={seo?.ogType ?? "website"} />
     <meta property="og:url" content={ogUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
-    {seo?.image?.alt ? <meta property="og:image:alt" content={seo.image.alt} /> : null}
+    {
+      seo?.image?.alt ? (
+        <meta property="og:image:alt" content={seo.image.alt} />
+      ) : null
+    }
     <meta property="og:locale" content={ogLocale} />
-    {ogLocaleAlternates.map((alt) => <meta property="og:locale:alternate" content={alt} />)}
+    {
+      ogLocaleAlternates.map((alt) => (
+        <meta property="og:locale:alternate" content={alt} />
+      ))
+    }
     <meta property="og:site_name" content={SITE_CONFIG.name} />
 
     <meta property="twitter:card" content="summary_large_image" />
@@ -102,7 +126,11 @@ const jsonLdString = jsonLdScript([
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={ogImageUrl} />
-    {seo?.image?.alt ? <meta property="twitter:image:alt" content={seo.image.alt} /> : null}
+    {
+      seo?.image?.alt ? (
+        <meta property="twitter:image:alt" content={seo.image.alt} />
+      ) : null
+    }
     <meta property="twitter:site" content={SITE_CONFIG.name} />
     <meta property="twitter:creator" content={SITE_CONFIG.author} />
 
@@ -111,9 +139,16 @@ const jsonLdString = jsonLdScript([
         <meta property="article:published_time" content={seo.publishedTime} />
       ) : null
     }
-    {seo?.updatedTime ? <meta property="article:modified_time" content={seo.updatedTime} /> : null}
+    {
+      seo?.updatedTime ? (
+        <meta property="article:modified_time" content={seo.updatedTime} />
+      ) : null
+    }
 
-    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+    <meta
+      name="robots"
+      content={noindex ? "noindex, nofollow" : "index, follow"}
+    />
 
     <Fragment set:html={jsonLdString} />
   </head>
@@ -131,8 +166,12 @@ const jsonLdString = jsonLdScript([
     </script>
 
     <script>
+      import "@/lib/animations/scrollReveal";
       import { initCookieConsent } from "@/lib/integrations/cookieConsent";
-      import { initZarazCTAListener, trackPageView } from "@/lib/integrations/zaraz";
+      import {
+        initZarazCTAListener,
+        trackPageView,
+      } from "@/lib/integrations/zaraz";
       import { initPageLifecycle } from "@/lib/pageLifecycle";
 
       initPageLifecycle();
@@ -144,7 +183,9 @@ const jsonLdString = jsonLdScript([
       });
     </script>
 
-    <div class="relative z-10 grid min-h-svh w-full max-w-full grid-rows-[auto_1fr_auto]">
+    <div
+      class="relative z-10 grid min-h-svh w-full max-w-full grid-rows-[auto_1fr_auto]"
+    >
       <a
         href="#main-content"
         class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-100 focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-slate-900 focus:shadow-md focus:outline-2 focus:outline-offset-2 focus:outline-blue-600"
