@@ -31,11 +31,11 @@ export function initScrollRevealAnimations(): void {
   mm = gsap.matchMedia();
   mm.add(
     {
-      desktop: "(min-width: 768px)",
+      any: "",
       reduceMotion: "(prefers-reduced-motion: reduce)",
     },
     (context) => {
-      const desktop = context.conditions?.desktop === true;
+      const desktop = window.matchMedia("(min-width: 768px)").matches;
       const reduceMotion = context.conditions?.reduceMotion === true;
       if (reduceMotion) {
         gsap.set(revealTargets, { clearProps: "all" });
@@ -50,14 +50,41 @@ export function initScrollRevealAnimations(): void {
         once: true,
         start: "top 84%",
         onEnter: (targets) => {
-          gsap.to(targets, {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.72,
-            ease: "power3.out",
-            stagger: 0.08,
-            overwrite: true,
-          });
+          const defaultTargets: HTMLElement[] = [];
+          const customTargets: HTMLElement[] = [];
+
+          for (const target of targets) {
+            if (!(target instanceof HTMLElement)) continue;
+
+            const customDelay = target.dataset.revealDelay;
+            if (customDelay !== undefined && customDelay !== "") {
+              customTargets.push(target);
+            } else {
+              defaultTargets.push(target);
+            }
+          }
+
+          if (defaultTargets.length > 0) {
+            gsap.to(defaultTargets, {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.72,
+              ease: "power3.out",
+              stagger: 0.08,
+              overwrite: true,
+            });
+          }
+
+          for (const target of customTargets) {
+            gsap.to(target, {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.72,
+              ease: "power3.out",
+              delay: Number.parseFloat(target.dataset.revealDelay ?? "0"),
+              overwrite: true,
+            });
+          }
         },
       });
     }
