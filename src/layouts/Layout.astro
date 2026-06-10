@@ -1,5 +1,7 @@
 ---
 import "@/styles/global.css";
+import manropeWoff2 from "@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url";
+import interWoff2 from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import { ClientRouter } from "astro:transitions";
 
 import Footer from "@/components/Footer.astro";
@@ -77,6 +79,20 @@ const jsonLdString = jsonLdScript([
       document.documentElement.classList.add("js");
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="preload"
+      href={manropeWoff2}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href={interWoff2}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <ClientRouter />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
