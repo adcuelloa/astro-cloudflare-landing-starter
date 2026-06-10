@@ -72,12 +72,22 @@ const jsonLdString = jsonLdScript([
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} class="js">
   <head>
     <meta charset="UTF-8" />
     <script is:inline>
       document.documentElement.classList.add("js");
     </script>
+    <noscript>
+      <style>
+        .js [data-hero-reveal],
+        .js [data-scroll-reveal] {
+          opacity: 1 !important;
+          visibility: visible !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="preload"
