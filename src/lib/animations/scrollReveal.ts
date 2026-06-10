@@ -42,7 +42,7 @@ export function initScrollRevealAnimations(): void {
         return;
       }
 
-      gsap.set(revealTargets, { autoAlpha: 0, y: desktop ? 34 : 22 });
+      const yFrom = desktop ? 34 : 22;
 
       ScrollTrigger.batch(revealTargets, {
         batchMax: desktop ? 4 : 2,
@@ -65,25 +65,33 @@ export function initScrollRevealAnimations(): void {
           }
 
           if (defaultTargets.length > 0) {
-            gsap.to(defaultTargets, {
-              autoAlpha: 1,
-              y: 0,
-              duration: 0.72,
-              ease: "power3.out",
-              stagger: 0.08,
-              overwrite: true,
-            });
+            gsap.fromTo(
+              defaultTargets,
+              { autoAlpha: 0, y: yFrom },
+              {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.72,
+                ease: "power3.out",
+                stagger: 0.08,
+                overwrite: true,
+              }
+            );
           }
 
           for (const target of customTargets) {
-            gsap.to(target, {
-              autoAlpha: 1,
-              y: 0,
-              duration: 0.72,
-              ease: "power3.out",
-              delay: Number.parseFloat(target.dataset.revealDelay ?? "0"),
-              overwrite: true,
-            });
+            gsap.fromTo(
+              target,
+              { autoAlpha: 0, y: yFrom },
+              {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.72,
+                ease: "power3.out",
+                delay: Number.parseFloat(target.dataset.revealDelay ?? "0"),
+                overwrite: true,
+              }
+            );
           }
         },
       });

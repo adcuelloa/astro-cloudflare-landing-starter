@@ -35,10 +35,14 @@ export function initHeroAnimations(): void {
   }
 
   ctx = gsap.context(() => {
-    gsap.set(revealTargets, { autoAlpha: 0, y: 18 });
     gsap
       .timeline({ defaults: { ease: "power3.out" } })
-      .to(revealTargets, { autoAlpha: 1, y: 0, duration: 0.72, stagger: 0.08 }, 0.18);
+      .fromTo(
+        revealTargets,
+        { autoAlpha: 0, y: 18 },
+        { autoAlpha: 1, y: 0, duration: 0.72, stagger: 0.08 },
+        0.18
+      );
   }, root);
 }
 

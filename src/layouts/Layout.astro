@@ -166,7 +166,6 @@ const jsonLdString = jsonLdScript([
     </script>
 
     <script>
-      import "@/lib/animations/scrollReveal";
       import { initCookieConsent } from "@/lib/integrations/cookieConsent";
       import {
         initZarazCTAListener,
@@ -180,6 +179,14 @@ const jsonLdString = jsonLdScript([
 
       document.addEventListener("astro:after-swap", () => {
         trackPageView();
+      });
+
+      // Load scroll-reveal after the first paint — CSS already pre-hides targets
+      // via `.js [data-scroll-reveal]`, so deferring here is safe.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          import("@/lib/animations/scrollReveal");
+        });
       });
     </script>
 

@@ -312,19 +312,8 @@
   color-scheme: light;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Pre-hide GSAP reveal targets until JS runs gsap.set (avoids visible -> hide flash).
-   .js is set by Layout's inline script; without JS, content stays visible. */
+/* Pre-hide reveal targets so lazily-loaded GSAP can animate them in without a
+   flash. Only when JS is present (.js set by Layout's inline script). */
 .js [data-scroll-reveal] {
   opacity: 0;
   visibility: hidden;
@@ -343,5 +332,14 @@
     opacity: 1 !important;
     visibility: visible !important;
     transform: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
