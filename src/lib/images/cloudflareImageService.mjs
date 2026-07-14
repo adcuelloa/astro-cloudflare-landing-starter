@@ -1,4 +1,4 @@
-const DEFAULT_FORMAT = "webp";
+const DEFAULT_FORMAT = "auto";
 const DEFAULT_METADATA = "none";
 const DEFAULT_FIT = "cover";
 
@@ -8,6 +8,12 @@ function stringSource(src) {
   }
 
   return src.src;
+}
+
+function cloudflareOutputFormat(options, config = {}) {
+  const format = options.format ?? config.defaultFormat ?? DEFAULT_FORMAT;
+
+  return format === "webp" ? DEFAULT_FORMAT : format;
 }
 
 function cloudflareOptionPairs(options, config) {
@@ -23,7 +29,7 @@ function cloudflareOptionPairs(options, config) {
 
   pairs.push(["fit", options.fit ?? config.defaultFit ?? DEFAULT_FIT]);
   pairs.push(["quality", options.quality ?? config.defaultQuality ?? 82]);
-  pairs.push(["format", options.format ?? config.defaultFormat ?? DEFAULT_FORMAT]);
+  pairs.push(["format", cloudflareOutputFormat(options, config)]);
   pairs.push(["metadata", config.metadata ?? DEFAULT_METADATA]);
 
   if (config.onerror) {
@@ -79,6 +85,8 @@ function srcSetValues(options) {
 
   const aspectRatio = width / height;
 
+  const format = cloudflareOutputFormat(options);
+
   return Array.from(new Set(widths)).map((srcSetWidth) => ({
     transform: {
       ...options,
@@ -86,9 +94,7 @@ function srcSetValues(options) {
       height: Math.round(srcSetWidth / aspectRatio),
     },
     descriptor: `${srcSetWidth}w`,
-    attributes: {
-      type: `image/${options.format ?? DEFAULT_FORMAT}`,
-    },
+    attributes: format === "auto" ? {} : { type: `image/${format}` },
   }));
 }
 

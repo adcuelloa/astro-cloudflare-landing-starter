@@ -50,7 +50,7 @@ export default defineConfig({
       config: {
         baseUrl: cdnBaseUrl,
         defaultFit: "cover",
-        defaultFormat: "webp",
+        defaultFormat: "auto",
         defaultQuality: 82,
         metadata: "none",
         onerror: "redirect",
