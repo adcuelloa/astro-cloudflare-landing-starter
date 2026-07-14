@@ -10,6 +10,7 @@
     "dev": "astro dev",
     "fmt": "oxfmt",
     "fmt:deps": "syncpack format",
+    "i18n:audit": "node scripts/i18n-audit.mjs",
     "lint": "oxlint --type-aware .",
     "lint:deps": "syncpack lint",
     "preview": "astro preview",
