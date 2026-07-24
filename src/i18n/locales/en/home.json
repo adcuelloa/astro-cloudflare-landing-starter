@@ -1,13 +1,10 @@
 {
-  "title": "Acme — Build something better",
-  "description": "A clean Astro starter with i18n, content collections, GSAP, SEO, and consent-gated analytics.",
   "hero": {
     "eyebrow": "Production-ready Astro template",
     "title": "Ship a fast, multilingual site in days, not weeks.",
     "lead": "Acme bundles the patterns we keep reaching for — i18n, content collections, GSAP scroll reveals, Cloudflare images, and analytics that respects consent.",
     "ctaPrimary": "Read the docs",
-    "ctaSecondary": "Browse the blog",
-    "imageAlt": "Abstract gradient hero artwork"
+    "ctaSecondary": "Browse the blog"
   },
   "features": {
     "eyebrow": "Why this template",
@@ -57,11 +54,5 @@
         "a": "useTranslations() infers keys from your JSON files at compile time, so unknown keys fail typecheck."
       }
     ]
-  },
-  "cta": {
-    "eyebrow": "Next step",
-    "title": "Clone, run, customize.",
-    "lead": "Open the README and the docs/ folder for the full architecture tour.",
-    "label": "View the README"
   }
 }

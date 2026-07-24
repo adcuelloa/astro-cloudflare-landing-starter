@@ -1,13 +1,10 @@
 {
-  "title": "Acme — Construye algo mejor",
-  "description": "Plantilla Astro con i18n, colecciones de contenido, GSAP, SEO y analítica con consentimiento.",
   "hero": {
     "eyebrow": "Plantilla Astro lista para producción",
     "title": "Lanza un sitio rápido y multilingüe en días, no semanas.",
     "lead": "Acme reúne los patrones que usamos siempre: i18n, colecciones de contenido, animaciones GSAP, imágenes en Cloudflare y analítica que respeta el consentimiento.",
     "ctaPrimary": "Leer la documentación",
-    "ctaSecondary": "Explorar el blog",
-    "imageAlt": "Arte abstracto del héroe"
+    "ctaSecondary": "Explorar el blog"
   },
   "features": {
     "eyebrow": "Por qué esta plantilla",
@@ -57,11 +54,5 @@
         "a": "useTranslations() infiere las claves desde los JSON en tiempo de compilación; claves desconocidas fallan el type-check."
       }
     ]
-  },
-  "cta": {
-    "eyebrow": "Siguiente paso",
-    "title": "Clona, ejecuta, personaliza.",
-    "lead": "Abre el README y la carpeta docs/ para un recorrido completo de la arquitectura.",
-    "label": "Ver el README"
   }
 }

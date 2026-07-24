@@ -4,7 +4,6 @@
   },
   "brand": {
     "name": "Acme",
-    "domain": "acme.example.com",
     "email": "hello@acme.example.com",
     "phone": "+1-000-000-0000"
   },
@@ -16,12 +15,6 @@
   "cta": {
     "header": "Get started",
     "mobile": "Start"
-  },
-  "labels": {
-    "learnMore": "Learn more",
-    "readMore": "Read more",
-    "viewDetails": "View details",
-    "back": "Back"
   },
   "skip": "Skip to main content",
   "aria": {
