@@ -159,6 +159,18 @@ const navItems: Array<{ route: RouteKey; label: string }> = [
       { signal: controller.signal }
     );
 
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Escape" && !mobileNav.classList.contains("hidden")) {
+          event.preventDefault();
+          setMenuOpen(false);
+          menuButton.focus();
+        }
+      },
+      { signal: controller.signal }
+    );
+
     $$("a, button", mobileNav).forEach((link) => {
       link.addEventListener("click", () => setMenuOpen(false), { signal: controller.signal });
     });
