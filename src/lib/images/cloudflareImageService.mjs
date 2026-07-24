@@ -10,12 +10,6 @@ function stringSource(src) {
   return src.src;
 }
 
-function cloudflareOutputFormat(options, config = {}) {
-  const format = options.format ?? config.defaultFormat ?? DEFAULT_FORMAT;
-
-  return format === "webp" ? DEFAULT_FORMAT : format;
-}
-
 function cloudflareOptionPairs(options, config) {
   const pairs = [];
 
@@ -29,7 +23,7 @@ function cloudflareOptionPairs(options, config) {
 
   pairs.push(["fit", options.fit ?? config.defaultFit ?? DEFAULT_FIT]);
   pairs.push(["quality", options.quality ?? config.defaultQuality ?? 82]);
-  pairs.push(["format", cloudflareOutputFormat(options, config)]);
+  pairs.push(["format", options.format ?? config.defaultFormat ?? DEFAULT_FORMAT]);
   pairs.push(["metadata", config.metadata ?? DEFAULT_METADATA]);
 
   if (config.onerror) {
@@ -84,8 +78,7 @@ function srcSetValues(options) {
   }
 
   const aspectRatio = width / height;
-
-  const format = cloudflareOutputFormat(options);
+  const format = options.format ?? DEFAULT_FORMAT;
 
   return Array.from(new Set(widths)).map((srcSetWidth) => ({
     transform: {

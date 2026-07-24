@@ -9,11 +9,18 @@ import {
   localizedCollectionEntryPath,
   localizedEntryPath,
 } from "@/lib/contentRouting";
-import { blogPostingSchema, breadcrumbSchema, contentSeo, contentSlug } from "@/lib/seo";
+import {
+  blogPostingSchema,
+  breadcrumbSchema,
+  contentSeo,
+  contentSlug,
+} from "@/lib/seo";
 
 const lang = "en";
 const t = useTranslations(lang);
-const site = Astro.site ?? new URL(import.meta.env.PUBLIC_SITE_URL ?? "https://acme.example.com");
+const site =
+  Astro.site ??
+  new URL(import.meta.env.PUBLIC_SITE_URL ?? "https://acme.example.com");
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog", ({ id }) => id.startsWith("en/"));
@@ -84,16 +91,25 @@ const seo = {
   <main class="bg-slate-50 text-slate-800">
     <section class="py-12 sm:py-20">
       <div class="mx-auto max-w-3xl px-4 sm:px-6">
-        <a class="font-display text-brand-800 text-sm font-bold" href={localizedPath(lang, "blog")}>
+        <a
+          class="font-display text-brand-800 text-sm font-bold"
+          href={localizedPath(lang, "blog")}
+        >
           ← {t("blog.backToList")}
         </a>
-        <p class="eyebrow mt-8 mb-3">{categoryEntries.map((c) => c.data.title).join(", ")}</p>
+        <p class="eyebrow mt-8 mb-3">
+          {categoryEntries.map((c) => c.data.title).join(", ")}
+        </p>
         <h1>{post.data.title}</h1>
         <p class="lead mt-4">{post.data.description}</p>
         <div
           class="mt-6 flex flex-wrap gap-3 border-t border-slate-200 pt-4 text-sm text-slate-500"
         >
-          <span>{t("blog.publishedOn")}{dateFormatter.format(post.data.pubDate)}</span>
+          <span
+            >{t("blog.publishedOn")}{
+              dateFormatter.format(post.data.pubDate)
+            }</span
+          >
           <span>·</span>
           <span>{frontmatter.readTime ?? 1} min {t("blog.readLabel")}</span>
           <span>·</span>
@@ -106,7 +122,6 @@ const seo = {
               alt={heroImageAlt}
               width={1200}
               height={675}
-              format="webp"
               quality={82}
               widths={[480, 640, 720, 960, 1200]}
               sizes="(min-width: 768px) 720px, calc(100vw - 2rem)"

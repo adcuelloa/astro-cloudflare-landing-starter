@@ -158,7 +158,7 @@ Render-time chain:
 
 ```
 <Image src="https://cdn.…/blog/hello.webp" width={1200} height={675}
-       widths={[480,640,720,960,1200]} sizes="…" quality={82} format="webp" />
+       widths={[480,640,720,960,1200]} sizes="…" quality={82} />
                             │
                 Astro emits responsive <img srcset="
                   https://cdn.…/cdn-cgi/image/width=480,…/https://cdn.…/blog/hello.webp 480w,

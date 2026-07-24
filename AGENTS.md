@@ -105,7 +105,9 @@ ship `markers: true`.
   transforming remote images during build.
 - Always use Astro `<Image />` from `astro:assets` — never a raw `<img>`.
 - Required props on every `<Image />`: meaningful `alt`, numeric `width`,
-  numeric `height`, `format`, `quality`, `loading`, `decoding="async"`.
+  numeric `height`, `quality`, `loading`, `decoding="async"`. Omit `format` by
+  default so Cloudflare can negotiate `format=auto`; set it only when a fixed
+  output format is intentional.
   For fluid layout use `widths` + `sizes`, not `densities`.
 - Standard sizes (see `docs/IMAGE_ASSETS.md`):
   - Blog card: `width=720 height=405`, `quality=76`, `widths=[320,480,640,720]`.

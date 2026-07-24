@@ -217,7 +217,6 @@ import { Image } from "astro:assets";
   alt="Meaningful description"
   width={1200}
   height={675}
-  format="webp"
   quality={82}
   widths={[480, 720, 960, 1200]}
   sizes="(min-width: 768px) 720px, calc(100vw - 2rem)"

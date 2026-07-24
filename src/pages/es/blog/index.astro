@@ -9,16 +9,17 @@ import { getPageSeo } from "@/lib/seo";
 
 const lang = "es";
 const t = useTranslations(lang);
-const site = Astro.site ?? new URL(import.meta.env.PUBLIC_SITE_URL ?? "https://acme.example.com");
+const site =
+  Astro.site ??
+  new URL(import.meta.env.PUBLIC_SITE_URL ?? "https://acme.example.com");
 const pageSeo = getPageSeo(lang, "blog");
-const cdnBaseUrl = (import.meta.env.PUBLIC_CDN_URL ?? "https://cdn.acme.example.com").replace(
-  /\/+$/,
-  ""
-);
+const cdnBaseUrl = (
+  import.meta.env.PUBLIC_CDN_URL ?? "https://cdn.acme.example.com"
+).replace(/\/+$/, "");
 
-const sortedPosts = (await getCollection("blog", ({ id }) => id.startsWith("es/"))).toSorted(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const sortedPosts = (
+  await getCollection("blog", ({ id }) => id.startsWith("es/"))
+).toSorted((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const posts = await Promise.all(
   sortedPosts.map(async (post) => {
@@ -26,7 +27,7 @@ const posts = await Promise.all(
     const { remarkPluginFrontmatter } = await render(post);
     const frontmatter = remarkPluginFrontmatter as { readTime?: number };
     return { post, categories, readTime: frontmatter.readTime ?? 1 };
-  })
+  }),
 );
 
 const dateFormatter = new Intl.DateTimeFormat("es", {
@@ -63,7 +64,6 @@ const dateFormatter = new Intl.DateTimeFormat("es", {
                   alt={post.data.imageAlt ?? ""}
                   width={720}
                   height={405}
-                  format="webp"
                   quality={76}
                   widths={[320, 480, 640, 720]}
                   sizes="(min-width: 1280px) 405px, (min-width: 1024px) calc((100vw - 4rem) / 3), (min-width: 640px) calc((100vw - 3rem) / 2), calc(100vw - 2rem)"
