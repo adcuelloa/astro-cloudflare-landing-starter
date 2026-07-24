@@ -5,7 +5,7 @@ to make changes that survive code review in this template.
 
 ## 1. Tech Stack
 
-- **Astro 6** — Static site with View Transitions (`<ClientRouter />`).
+- **Astro 7** — Static site with View Transitions (`<ClientRouter />`).
 - **TypeScript** — Strict mode, path alias `@/*` → `./src/*`.
 - **Tailwind CSS 4** — Configured via VitePlugin (no PostCSS config file).
 - **Cloudflare Pages** — Static-first deployment target; use Pages Functions for small endpoints.

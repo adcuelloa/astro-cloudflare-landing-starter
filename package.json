@@ -2,7 +2,7 @@
   "name": "astro-cloudflare-starter",
   "version": "0.1.0",
   "private": true,
-  "description": "Cloudflare Pages static-first Astro 6 starter with i18n, content collections, GSAP, Zaraz consent analytics, Cloudflare image transformations, Pages Functions guidance, and SEO helpers.",
+  "description": "Cloudflare Pages static-first Astro 7 starter with i18n, content collections, GSAP, Zaraz consent analytics, Cloudflare image transformations, Pages Functions guidance, and SEO helpers.",
   "type": "module",
   "scripts": {
     "astro": "astro",

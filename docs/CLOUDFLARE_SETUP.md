@@ -410,8 +410,8 @@ export default defineConfig({
 });
 ```
 
-The Cloudflare adapter targets Workers in Astro 6 / adapter v13. Do not document
-an adapter build as the default Cloudflare Pages path.
+The Cloudflare adapter targets Workers. Do not document an adapter build as the
+default Cloudflare Pages path.
 
 Sources:
 [Astro Cloudflare adapter](https://docs.astro.build/en/guides/integrations-guide/cloudflare/)

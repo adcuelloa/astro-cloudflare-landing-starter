@@ -1,6 +1,6 @@
 # astro-cloudflare-starter
 
-Cloudflare Pages static-first Astro 6 starter for bilingual landing pages that should be
+Cloudflare Pages static-first Astro 7 starter for bilingual landing pages that should be
 easy for a developer or AI agent to extend. It packages the patterns from the
 MasterSteps site into a reusable base: typed i18n, content collections, SEO
 helpers, Cloudflare image delivery, consent-gated Zaraz analytics, GSAP
@@ -18,24 +18,25 @@ pnpm install
 pnpm dev          # http://localhost:4321
 pnpm build        # build to ./dist
 pnpm preview      # preview the built site locally
-pnpm type-check   # astro check
-pnpm seo:audit    # validate collection frontmatter
-pnpm fmt          # prettier
+pnpm type-check   # oxlint type-aware checks
+pnpm i18n:audit   # validate translation usage and parity
+pnpm seo:audit    # validate static metadata and collection frontmatter
+pnpm fmt          # oxfmt
 pnpm lint         # oxlint
 ```
 
 Before deploying a real site, replace these placeholders:
 
-| File                                    | Replace                                                    |
-| --------------------------------------- | ---------------------------------------------------------- |
-| `.env.example`                          | `PUBLIC_SITE_URL` and `PUBLIC_CDN_URL`                     |
-| `astro.config.mjs`                      | Cloudflare image service settings if needed                |
-| `src/lib/seo.ts`                        | `SITE_CONFIG` brand, email, author, and schema defaults    |
-| `public/_headers`                       | CSP allowlists for real scripts, fonts, frames, and CDN    |
-| `src/i18n/locales/{en,es}/common.json`  | `brand.name`, `brand.domain`, `brand.email`, `brand.phone` |
-| `src/lib/integrations/cookieConsent.ts` | Cookie name and consent copy                               |
-| `package.json`                          | `name` and `description`                                   |
-| `.node-version`                         | Node version used locally and by Cloudflare Pages          |
+| File                                    | Replace                                                 |
+| --------------------------------------- | ------------------------------------------------------- |
+| `.env.example`                          | `PUBLIC_SITE_URL` and `PUBLIC_CDN_URL`                  |
+| `astro.config.mjs`                      | Cloudflare image service settings if needed             |
+| `src/lib/seo.ts`                        | `SITE_CONFIG` brand, email, author, and schema defaults |
+| `public/_headers`                       | CSP allowlists for real scripts, fonts, frames, and CDN |
+| `src/i18n/locales/{en,es}/common.json`  | `brand.name`, `brand.email`, `brand.phone`              |
+| `src/lib/integrations/cookieConsent.ts` | Cookie name and consent copy                            |
+| `package.json`                          | `name` and `description`                                |
+| `.node-version`                         | Node version used locally and by Cloudflare Pages       |
 
 ## Developer And Agent DX
 
