@@ -1,7 +1,8 @@
 /**
- * SEO audit — pre-build sanity check for content collections.
+ * SEO audit — pre-build sanity check for static metadata and content collections.
  *
  * Run via `pnpm seo:audit`. Wire it into CI before `astro build` to catch:
+ *   - static titles and descriptions outside recommended search-result lengths
  *   - missing required frontmatter fields
  *   - images that don't have an `imageAlt`
  *   - duplicate `urlSlug` within the same locale
@@ -15,8 +16,11 @@ import { join, relative } from "node:path";
 
 const root = process.cwd();
 const contentRoot = join(root, "src", "content");
+const localesRoot = join(root, "src", "i18n", "locales");
 const collections = ["blog"];
 const requiredFields = ["title", "description", "urlSlug"];
+const titleRange = { min: 50, max: 60 };
+const descriptionRange = { min: 120, max: 158 };
 const errors = [];
 const warnings = [];
 
@@ -47,6 +51,32 @@ function parseFrontmatter(file) {
 function localeFor(file) {
   const parts = relative(contentRoot, file).split("/");
   return parts[1] ?? "unknown";
+}
+
+for (const locale of ["en", "es"]) {
+  const seo = JSON.parse(readFileSync(join(localesRoot, locale, "seo.json"), "utf8"));
+
+  for (const [page, metadata] of Object.entries(seo)) {
+    const label = `${locale}.seo.${page}`;
+
+    if (
+      typeof metadata.title !== "string" ||
+      metadata.title.length < titleRange.min ||
+      metadata.title.length > titleRange.max
+    ) {
+      errors.push(`${label}.title must be ${titleRange.min}-${titleRange.max} characters`);
+    }
+
+    if (
+      typeof metadata.description !== "string" ||
+      metadata.description.length < descriptionRange.min ||
+      metadata.description.length > descriptionRange.max
+    ) {
+      errors.push(
+        `${label}.description must be ${descriptionRange.min}-${descriptionRange.max} characters`
+      );
+    }
+  }
 }
 
 for (const collection of collections) {

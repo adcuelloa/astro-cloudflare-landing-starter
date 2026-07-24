@@ -1,30 +1,30 @@
 {
   "home": {
-    "title": "Acme — Construye algo mejor",
-    "description": "Acme es una plantilla Astro lista para producción con i18n, colecciones de contenido, GSAP y SEO listo para Cloudflare."
+    "title": "Acme — Plantilla Astro y Cloudflare lista para producción",
+    "description": "Lanza un sitio rápido y multilingüe con i18n tipado, colecciones de contenido, animaciones GSAP, imágenes Cloudflare y analítica con consentimiento."
   },
   "about": {
-    "title": "Nosotros — Acme",
-    "description": "Quiénes somos, qué construimos y por qué existe esta plantilla."
+    "title": "Sobre Acme — Por qué existe esta plantilla para producción",
+    "description": "Conoce los principios de Acme y cómo integra patrones prácticos de Astro, Cloudflare, accesibilidad, contenido y localización para producción."
   },
   "blog": {
-    "title": "Blog — Acme",
-    "description": "Artículos, notas y tutoriales del equipo Acme."
+    "title": "Blog de Acme — Guías de Astro, Cloudflare y plataforma web",
+    "description": "Consulta guías prácticas sobre Astro, Cloudflare, rendimiento, accesibilidad, localización, colecciones de contenido y desarrollo web moderno."
   },
   "contact": {
-    "title": "Contacto — Acme",
-    "description": "Ponte en contacto con el equipo Acme."
+    "title": "Contacto Acme — Empieza tu próximo proyecto con Astro",
+    "description": "Contacta al equipo Acme para hablar de la plantilla, compartir comentarios o saber cómo sus patrones de Astro y Cloudflare encajan en tu sitio."
   },
   "legalPrivacy": {
-    "title": "Política de privacidad — Acme",
-    "description": "Cómo Acme recopila, usa y protege los datos de los visitantes."
+    "title": "Privacidad — Cómo protege Acme los datos de visitantes",
+    "description": "Conoce qué información de visitantes recopila Acme, por qué se procesa, durante cuánto tiempo se conserva y qué opciones de privacidad tienes."
   },
   "legalTerms": {
-    "title": "Términos — Acme",
-    "description": "Términos de uso del sitio web de Acme."
+    "title": "Términos de uso — Reglas del sitio y la plantilla Acme",
+    "description": "Revisa las condiciones que regulan el acceso al sitio de Acme, su contenido de ejemplo, los servicios externos y la plantilla para producción."
   },
   "legalCookies": {
-    "title": "Política de cookies — Acme",
-    "description": "Cómo Acme usa cookies y analítica con consentimiento."
+    "title": "Política de cookies — Consentimiento y analítica en Acme",
+    "description": "Entiende cómo Acme usa cookies esenciales, analítica opcional, preferencias de consentimiento y almacenamiento del navegador en esta plantilla."
   }
 }

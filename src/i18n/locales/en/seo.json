@@ -1,30 +1,30 @@
 {
   "home": {
-    "title": "Acme — Build something better",
-    "description": "Acme is a clean, production-ready Astro template with i18n, content collections, GSAP, and Cloudflare-friendly SEO."
+    "title": "Acme — Production-ready Astro and Cloudflare starter",
+    "description": "Launch a fast multilingual website with typed i18n, content collections, GSAP reveals, Cloudflare images, and consent-aware analytics."
   },
   "about": {
-    "title": "About — Acme",
-    "description": "Who we are, what we build, and why this template exists."
+    "title": "About Acme — Why this production-ready starter exists",
+    "description": "Learn the principles behind Acme and how its practical Astro, Cloudflare, accessibility, content, and localization patterns fit together."
   },
   "blog": {
-    "title": "Blog — Acme",
-    "description": "Articles, notes, and tutorials from the Acme team."
+    "title": "Acme Blog — Astro, Cloudflare, and web platform guides",
+    "description": "Read practical guides about Astro, Cloudflare, performance, accessibility, localization, content collections, and modern web development."
   },
   "contact": {
-    "title": "Contact — Acme",
-    "description": "Get in touch with the Acme team."
+    "title": "Contact Acme — Start building your next Astro project",
+    "description": "Contact the Acme team to discuss the starter, share feedback, or ask how its Astro and Cloudflare patterns fit your next production website."
   },
   "legalPrivacy": {
-    "title": "Privacy Policy — Acme",
-    "description": "How Acme collects, uses, and protects visitor data."
+    "title": "Privacy Policy — How Acme protects visitor information",
+    "description": "Learn what visitor information Acme collects, why it is processed, how long it is retained, and which privacy choices are available to you."
   },
   "legalTerms": {
-    "title": "Terms — Acme",
-    "description": "Terms of use for the Acme website."
+    "title": "Terms of Use — Rules for using the Acme starter website",
+    "description": "Review the conditions that govern access to the Acme website, its example content, external services, and the production-ready starter."
   },
   "legalCookies": {
-    "title": "Cookie Policy — Acme",
-    "description": "How Acme uses cookies and consent-gated analytics."
+    "title": "Cookie Policy — Consent and analytics practices at Acme",
+    "description": "Understand how Acme uses essential cookies, optional analytics, consent preferences, and related browser storage across this starter website."
   }
 }
