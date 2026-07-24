@@ -147,18 +147,18 @@ const jsonLdString = jsonLdScript([
     }
     <meta property="og:site_name" content={SITE_CONFIG.name} />
 
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={ogUrl} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={ogUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
     {
       seo?.image?.alt ? (
-        <meta property="twitter:image:alt" content={seo.image.alt} />
+        <meta name="twitter:image:alt" content={seo.image.alt} />
       ) : null
     }
-    <meta property="twitter:site" content={SITE_CONFIG.name} />
-    <meta property="twitter:creator" content={SITE_CONFIG.author} />
+    <meta name="twitter:site" content={SITE_CONFIG.twitter} />
+    <meta name="twitter:creator" content={SITE_CONFIG.twitter} />
 
     {
       seo?.publishedTime ? (

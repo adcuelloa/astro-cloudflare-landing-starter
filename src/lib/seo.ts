@@ -50,6 +50,7 @@ const SITE_CONFIG = {
   logo: `${siteUrl}/favicon.svg`,
   email: "hello@acme.example.com",
   author: "Acme",
+  twitter: "@acme",
   areaServed: "Global",
 } as const;
 
