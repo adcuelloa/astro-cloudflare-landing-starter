@@ -1,29 +1,25 @@
-/**
- * Scroll-driven reveals for `[data-scroll-reveal]` elements.
- * Respects `prefers-reduced-motion` and re-binds on every Astro view transition.
- */
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const REVEAL_SELECTOR = "[data-scroll-reveal]";
+const REVEAL_SELECTOR = "[data-scroll-reveal]:not(section)";
 
 let mm: gsap.MatchMedia | null = null;
 let listenersBound = false;
 
-export function cleanupScrollRevealAnimations(): void {
+export function cleanupScrollReveal(): void {
   mm?.revert();
   mm = null;
 }
 
-export function initScrollRevealAnimations(): void {
+export function initScrollReveal(): void {
   if (typeof document === "undefined") {
-    cleanupScrollRevealAnimations();
+    cleanupScrollReveal();
     return;
   }
 
-  cleanupScrollRevealAnimations();
+  cleanupScrollReveal();
 
   const revealTargets = gsap.utils.toArray<HTMLElement>(REVEAL_SELECTOR);
   if (revealTargets.length === 0) return;
@@ -31,87 +27,51 @@ export function initScrollRevealAnimations(): void {
   mm = gsap.matchMedia();
   mm.add(
     {
-      any: "",
+      all: "",
       reduceMotion: "(prefers-reduced-motion: reduce)",
     },
     (context) => {
       const desktop = window.matchMedia("(min-width: 768px)").matches;
-      const reduceMotion = context.conditions?.reduceMotion === true;
+      const reduceMotion = !!context.conditions?.reduceMotion;
       if (reduceMotion) {
         gsap.set(revealTargets, { clearProps: "all" });
         return;
       }
 
-      const yFrom = desktop ? 34 : 22;
+      const yFrom = desktop ? 24 : 22;
 
       ScrollTrigger.batch(revealTargets, {
         batchMax: desktop ? 4 : 2,
-        interval: 0.08,
+        interval: 0.1,
         once: true,
-        start: "top 84%",
+        start: "top 90%",
         onEnter: (targets) => {
-          const defaultTargets: HTMLElement[] = [];
-          const customTargets: HTMLElement[] = [];
-
-          for (const target of targets) {
-            if (!(target instanceof HTMLElement)) continue;
-
-            const customDelay = target.dataset.revealDelay;
-            if (customDelay !== undefined && customDelay !== "") {
-              customTargets.push(target);
-            } else {
-              defaultTargets.push(target);
+          gsap.fromTo(
+            targets,
+            { opacity: 0, y: yFrom },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.72,
+              ease: "power3.out",
+              stagger: desktop ? 0.1 : 0.06,
+              overwrite: true,
             }
-          }
-
-          if (defaultTargets.length > 0) {
-            gsap.fromTo(
-              defaultTargets,
-              { autoAlpha: 0, y: yFrom },
-              {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.72,
-                ease: "power3.out",
-                stagger: 0.08,
-                overwrite: true,
-              }
-            );
-          }
-
-          for (const target of customTargets) {
-            gsap.fromTo(
-              target,
-              { autoAlpha: 0, y: yFrom },
-              {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.72,
-                ease: "power3.out",
-                delay: Number.parseFloat(target.dataset.revealDelay ?? "0"),
-                overwrite: true,
-              }
-            );
-          }
+          );
         },
       });
     }
   );
-
-  requestAnimationFrame(() => {
-    ScrollTrigger.refresh();
-  });
 }
 
-export function initScrollRevealPageAnimations(): void {
+export function initScrollRevealModule(): void {
   if (typeof document === "undefined") return;
-  initScrollRevealAnimations();
-
   if (listenersBound) return;
   listenersBound = true;
 
-  document.addEventListener("astro:before-swap", cleanupScrollRevealAnimations);
-  document.addEventListener("astro:page-load", initScrollRevealAnimations);
+  document.addEventListener("astro:before-swap", cleanupScrollReveal);
+  document.addEventListener("astro:page-load", initScrollReveal);
+  initScrollReveal();
 }
 
-initScrollRevealPageAnimations();
+initScrollRevealModule();

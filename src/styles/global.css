@@ -314,23 +314,14 @@
 
 /* Pre-hide reveal targets so lazily-loaded GSAP can animate them in without a
    flash. Only when JS is present (.js set by Layout's inline script). */
-.js [data-scroll-reveal] {
+.js [data-scroll-reveal]:not(section) {
   opacity: 0;
-  visibility: hidden;
   transform: translateY(22px);
 }
 
-.js [data-hero-reveal] {
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(18px);
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .js [data-scroll-reveal],
-  .js [data-hero-reveal] {
+  .js [data-scroll-reveal] {
     opacity: 1 !important;
-    visibility: visible !important;
     transform: none !important;
   }
 

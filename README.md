@@ -201,13 +201,13 @@ should only allow the real third-party hosts used by the site.
 
 ## Removing Pieces
 
-| Want to remove      | Main files to delete or edit                                                                                          |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Spanish locale      | `src/i18n/locales/es/`, `src/pages/es/`, `src/content/blog/es/`, `src/i18n/ui.ts`, `slugs.ts`                         |
-| Cookie banner/Zaraz | `src/lib/integrations/`, related imports/scripts in `Layout.astro`, consent CSS                                       |
-| GSAP                | `src/lib/animations/`, related `Layout.astro` import, `data-hero`, `data-hero-reveal`, and `data-scroll-reveal` hooks |
-| Blog                | `src/pages/blog/`, `src/pages/es/blog/`, `src/content/blog/`, related route and nav keys                              |
-| Pages Functions     | Remove `functions/` and any form/API routes that depend on them                                                       |
+| Want to remove      | Main files to delete or edit                                                                     |
+| ------------------- | ------------------------------------------------------------------------------------------------ |
+| Spanish locale      | `src/i18n/locales/es/`, `src/pages/es/`, `src/content/blog/es/`, `src/i18n/ui.ts`, `slugs.ts`    |
+| Cookie banner/Zaraz | `src/lib/integrations/`, related imports/scripts in `Layout.astro`, consent CSS                  |
+| GSAP                | `src/lib/animations/`, related `Layout.astro` import, `data-hero` and `data-scroll-reveal` hooks |
+| Blog                | `src/pages/blog/`, `src/pages/es/blog/`, `src/content/blog/`, related route and nav keys         |
+| Pages Functions     | Remove `functions/` and any form/API routes that depend on them                                  |
 
 Each optional piece is wired through named entry points, so searching the import
 usually shows every callsite.

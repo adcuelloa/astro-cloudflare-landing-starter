@@ -71,16 +71,15 @@ alternateLinks("blog", Astro.site!); // → [{ hreflang, href }, …]
 
 ## 6. Animations
 
-| Need                                                                | Tool                                                 |
-| ------------------------------------------------------------------- | ---------------------------------------------------- |
-| Tiny hover/active states, decorative CSS loops                      | Tailwind / CSS                                       |
+| Need                                                                | Tool                                                                 |
+| ------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Tiny hover/active states, decorative CSS loops                      | Tailwind / CSS                                                       |
 | Scroll reveals, staggered grids, pinning, scrubbed motion, SVG draw | GSAP ScrollTrigger (`scrollReveal.ts`, imported from `Layout.astro`) |
-| Accordion/dropdown height transitions                               | GSAP or CSS with Astro lifecycle cleanup             |
+| Accordion/dropdown height transitions                               | GSAP or CSS with Astro lifecycle cleanup                             |
 
 Markup hooks should be stable `data-*` attributes — never visual Tailwind
 class selectors. Animation files live in `src/lib/animations/`:
 
-- `heroAnimations.ts` — one-shot reveal for `[data-hero] [data-hero-reveal]`.
 - `scrollReveal.ts` — scroll batch reveal for `[data-scroll-reveal]`; imported
   once from `Layout.astro`. Pre-hide hooks live in `global.css` (`.js` gate).
 - `pages/<name>.ts` — optional page-specific ScrollTrigger beyond scroll reveal.
