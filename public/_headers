@@ -1,5 +1,5 @@
 # Cloudflare Pages security & cache headers.
-# CSP whitelist matches what the template integrates with — adjust to your stack.
+# CSP whitelist matches what the template integrates with - adjust to your stack.
 
 /*
   X-Frame-Options: DENY
@@ -8,4 +8,3 @@
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Content-Security-Policy: default-src 'self'; img-src 'self' data: https://cdn.acme.example.com; script-src 'self' 'sha256-ZnYJX5ypMaaAhxxWhSEjbMkhO2A9yPmbzEQH3LFaITA=' 'sha256-8Ehpcq0BO0TOD30uMDaAwLwrbN8GjB4JyuV2j/44lNU=' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; frame-src 'self'; connect-src 'self' https://cloudflareinsights.com; object-src 'none'; base-uri 'self'; form-action 'self'
-  Cache-Control: public, max-age=0, must-revalidate
