@@ -39,8 +39,8 @@ export default defineConfig({
   output: "static",
   trailingSlash: "never",
   prefetch: {
-    prefetchAll: true,
-    defaultStrategy: "viewport",
+    prefetchAll: false,
+    defaultStrategy: "hover",
   },
   integrations: [sitemap()],
   image: {
@@ -69,10 +69,13 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     build: {
-      assetsInlineLimit: 1024,
+      assetsInlineLimit: 4096,
       target: "es2022",
       sourcemap: false,
       chunkSizeWarningLimit: 800,
+    },
+    optimizeDeps: {
+      exclude: ["astro_compiler-runtime"],
     },
   },
   i18n: {
