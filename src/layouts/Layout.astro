@@ -214,8 +214,9 @@ const jsonLdString = jsonLdScript([
         (async () => {
           // ScrollTrigger is only pulled into the critical script when idle.
           const { default: ScrollTrigger } = await import("gsap/ScrollTrigger");
-          await import("@/lib/animations/scrollReveal");
+          ScrollTrigger.refresh();
 
+          await import("@/lib/animations/scrollReveal");
           requestAnimationFrame(() => ScrollTrigger.refresh());
         })();
       });
