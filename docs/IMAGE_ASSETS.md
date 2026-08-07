@@ -24,15 +24,15 @@ Astro Image
 
 ## Image modes
 
-The starter defaults to Astro `<Image />` with a custom external image service,
-without a Cloudflare adapter:
+The starter defaults to Astro `<Image />` with a custom external image service.
+The Cloudflare adapter is told to preserve that service during prerendering:
 
 ```astro
 <Image src="https://cdn.acme.example.com/hero.webp" widths={[480, 720, 1200]} ... />
 ```
 
 Prefer this mode for static landing pages that want real resized image delivery:
-it deploys cleanly to Cloudflare Pages, avoids build-time image downloads, and
+it deploys cleanly to Cloudflare Workers, avoids build-time image downloads, and
 uses Cloudflare's CDN Image Transformations directly.
 
 Astro still provides useful image markup: required `alt`, explicit dimensions,
@@ -46,13 +46,13 @@ free-first.
 
 Decision rule:
 
-| Need                                       | Preferred mode                          |
-| ------------------------------------------ | --------------------------------------- |
-| Default static landing on Cloudflare Pages | Cloudflare image service + Cache Rule   |
-| R2/CDN masters with fixed landing assets   | Cloudflare image service + Cache Rule   |
-| No build-time image downloads              | Cloudflare image service or passthrough |
-| No transformation quota                    | Astro `passthroughImageService()`       |
-| Build-time optimized variants              | Astro default image service + `sharp`   |
+| Need                                         | Preferred mode                          |
+| -------------------------------------------- | --------------------------------------- |
+| Default static landing on Cloudflare Workers | Cloudflare image service + Cache Rule   |
+| R2/CDN masters with fixed landing assets     | Cloudflare image service + Cache Rule   |
+| No build-time image downloads                | Cloudflare image service or passthrough |
+| No transformation quota                      | Astro `passthroughImageService()`       |
+| Build-time optimized variants                | Astro default image service + `sharp`   |
 
 Configure the `/cdn-cgi/image/` Cache Rule described in
 `docs/CLOUDFLARE_SETUP.md` before launch.

@@ -1,14 +1,14 @@
 # astro-cloudflare-starter
 
-Cloudflare Pages static-first Astro 7 starter for bilingual landing pages that should be
+Cloudflare Workers static-first Astro 7 starter for bilingual landing pages that should be
 easy for a developer or AI agent to extend. It packages the patterns from the
 MasterSteps site into a reusable base: typed i18n, content collections, SEO
 helpers, Cloudflare image delivery, consent-gated Zaraz analytics, GSAP
 animation entry points, and agent-ready project instructions.
 
-This repo is intentionally **Cloudflare free-first**. The default architecture
-targets Cloudflare Pages static hosting and only reaches for Pages Functions or
-Workers when a project has a real runtime need.
+This repo is intentionally **Cloudflare free-first**. Astro prerenders the site
+to `dist/`; the official Cloudflare adapter and Wrangler deploy those files as
+Workers static assets while keeping the path open for runtime features.
 
 ## Quick Start
 
@@ -17,12 +17,14 @@ corepack enable
 pnpm install
 pnpm dev          # http://localhost:4321
 pnpm build        # build to ./dist
+pnpm deploy       # build and deploy to Cloudflare Workers
 pnpm preview      # preview the built site locally
 pnpm type-check   # oxlint type-aware checks
 pnpm i18n:audit   # validate translation usage and parity
 pnpm seo:audit    # validate static metadata and collection frontmatter
 pnpm fmt          # oxfmt
 pnpm lint         # oxlint
+pnpm wrangler:types # regenerate Cloudflare binding types
 ```
 
 Before deploying a real site, replace these placeholders:
@@ -36,7 +38,8 @@ Before deploying a real site, replace these placeholders:
 | `src/i18n/locales/{en,es}/common.json`  | `brand.name`, `brand.email`, `brand.phone`              |
 | `src/lib/integrations/cookieConsent.ts` | Cookie name and consent copy                            |
 | `package.json`                          | `name` and `description`                                |
-| `.node-version`                         | Node version used locally and by Cloudflare Pages       |
+| `.node-version`                         | Node version used locally and by Cloudflare Builds      |
+| `wrangler.jsonc`                        | Worker name, compatibility date, assets, and bindings   |
 
 ## Developer And Agent DX
 
@@ -52,7 +55,7 @@ or an AI coding agent:
 | `skills-lock.json`                  | Provenance and hash for the local starter skill                         |
 | `.skills/astro-cloudflare-landing/` | Local starter skill for landing-page work                               |
 | `.claude/skills -> ../.skills`      | Claude-compatible symlink to local skills                               |
-| `docs/CLOUDFLARE_SETUP.md`          | Full Cloudflare setup guide for Pages, Functions, R2, images, and Zaraz |
+| `docs/CLOUDFLARE_SETUP.md`          | Full Cloudflare setup guide for Workers, R2, images, and Zaraz          |
 | `docs/LANDING_PAGE_PLAYBOOK.md`     | Step-by-step guide to ship a landing page from this template            |
 
 Recommended skills for agents working in this repo:
@@ -61,7 +64,7 @@ Recommended skills for agents working in this repo:
 - `tailwind-css-patterns` for Tailwind 4 and token-based styling.
 - `typescript-advanced-types` for strict TypeScript changes.
 - `cloudflare`, `cloudflare-deploy`, `wrangler`, and
-  `workers-best-practices` for Cloudflare Pages, Pages Functions, and deployment work.
+  `workers-best-practices` for Cloudflare Workers and deployment work.
 - `seo`, `web-perf`, and `accessibility` for production-quality review.
 - `gsap-*` skills when changing page animations or ScrollTrigger behavior.
 - `frontend-design` when creating or refining UI surfaces.
@@ -75,21 +78,19 @@ agent-native layout is `.agents/skills/astro-cloudflare-landing` with
 
 ## Cloudflare Free-First Notes
 
-Last checked against Cloudflare docs on **May 12, 2026**.
+Last checked against Cloudflare docs on **August 6, 2026**.
 
-| Service                      | Free-first guidance                                                                                                                                                                                                                                 |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Cloudflare Pages             | Default target for this template. Static asset requests are free/unlimited when Functions are not invoked. Free limits include 500 builds/month, 1 concurrent build, 100 custom domains/project, 20,000 files/site, and 25 MiB max asset file size. |
-| Pages Functions              | Optional for small endpoints such as forms or webhooks. Functions count against Workers-style quotas, so keep the landing static by default.                                                                                                        |
-| R2                           | Use for image masters or downloadable files when the repo should not store binaries. Standard storage free tier includes 10 GB-month/month, 1M Class A ops/month, 10M Class B ops/month, and free internet egress.                                  |
-| D1                           | Optional for lightweight dynamic features. Workers Free includes 5M rows read/day, 100k rows written/day, and 5 GB total storage; D1 has no data transfer/egress charge.                                                                            |
-| Zaraz                        | This template's analytics wrappers assume Cloudflare Zaraz. Every account gets 1,000,000 free Zaraz Events/month; without paid usage billing, Zaraz is disabled until the next billing cycle after the free allocation is exceeded.                 |
-| Cloudflare Images transforms | Default image delivery uses `PUBLIC_CDN_URL + "/cdn-cgi/image"` through a custom Astro image service. Images Free includes 5,000 unique transformations/month; keep width/quality/format recipes small and cache them.                              |
+| Service                      | Free-first guidance                                                                                                                                                                                                                 |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cloudflare Workers           | Default target. Static files are served through Workers Static Assets; the Worker entrypoint is available for runtime routes when needed.                                                                                           |
+| R2                           | Use for image masters or downloadable files when the repo should not store binaries. Standard storage free tier includes 10 GB-month/month, 1M Class A ops/month, 10M Class B ops/month, and free internet egress.                  |
+| D1                           | Optional for lightweight dynamic features. Workers Free includes 5M rows read/day, 100k rows written/day, and 5 GB total storage; D1 has no data transfer/egress charge.                                                            |
+| Zaraz                        | This template's analytics wrappers assume Cloudflare Zaraz. Every account gets 1,000,000 free Zaraz Events/month; without paid usage billing, Zaraz is disabled until the next billing cycle after the free allocation is exceeded. |
+| Cloudflare Images transforms | Default image delivery uses `PUBLIC_CDN_URL + "/cdn-cgi/image"` through a custom Astro image service. Images Free includes 5,000 unique transformations/month; keep width/quality/format recipes small and cache them.              |
 
 Sources:
-[Pages limits](https://developers.cloudflare.com/pages/platform/limits/),
-[Pages Functions pricing](https://developers.cloudflare.com/pages/functions/pricing/),
 [Workers limits](https://developers.cloudflare.com/workers/platform/limits/),
+[Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/),
 [R2 pricing](https://developers.cloudflare.com/r2/pricing/),
 [D1 pricing](https://developers.cloudflare.com/d1/platform/pricing/),
 [Zaraz pricing](https://developers.cloudflare.com/zaraz/pricing-info/), and
@@ -181,21 +182,17 @@ marketing consent allows it.
 
 ## Cloudflare Deployment
 
-The template builds a static Astro site for Cloudflare Pages. It does not use
-`@astrojs/cloudflare` by default because basic landing pages, Pages Functions,
-and Cloudflare CDN Image Transformations do not need an adapter.
+The template keeps Astro's `output: "static"` and uses `@astrojs/cloudflare`
+with Wrangler's unified entrypoint. `dist/` is deployed as Workers Static
+Assets; static requests are served directly and runtime routes can be added
+later without changing deployment platforms.
 
-Cloudflare Pages setup:
+```bash
+pnpm deploy
+```
 
-| Setting           | Value        |
-| ----------------- | ------------ |
-| Build command     | `pnpm build` |
-| Build output      | `dist`       |
-| Node package tool | `pnpm`       |
-
-Use Pages Functions for small endpoints. Switch to Workers +
-`@astrojs/cloudflare` only when a project needs SSR, Astro Actions, sessions,
-Server Islands, or runtime Cloudflare bindings.
+Set the real Worker name in `wrangler.jsonc`. For Git-based Cloudflare Builds,
+use `pnpm build` as the build command and `pnpm deploy` as the deploy command.
 
 Review `public/_headers` before launch. The CSP is intentionally strict and
 should only allow the real third-party hosts used by the site.
@@ -208,7 +205,7 @@ should only allow the real third-party hosts used by the site.
 | Cookie banner/Zaraz | `src/lib/integrations/`, related imports/scripts in `Layout.astro`, consent CSS                  |
 | GSAP                | `src/lib/animations/`, related `Layout.astro` import, `data-hero` and `data-scroll-reveal` hooks |
 | Blog                | `src/pages/blog/`, `src/pages/es/blog/`, `src/content/blog/`, related route and nav keys         |
-| Pages Functions     | Remove `functions/` and any form/API routes that depend on them                                  |
+| Worker runtime      | Remove runtime routes/bindings; the static asset deployment still works                          |
 
 Each optional piece is wired through named entry points, so searching the import
 usually shows every callsite.

@@ -1,5 +1,6 @@
 // @ts-check
 
+import cloudflare from "@astrojs/cloudflare";
 import { unified } from "@astrojs/markdown-remark";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
@@ -37,6 +38,7 @@ export function remarkReadingTime() {
 export default defineConfig({
   site: siteUrl,
   output: "static",
+  adapter: cloudflare({ imageService: "custom" }),
   trailingSlash: "never",
   prefetch: {
     prefetchAll: false,

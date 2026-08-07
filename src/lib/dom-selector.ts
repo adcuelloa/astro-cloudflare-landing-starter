@@ -10,7 +10,7 @@
  */
 export const $ = <T extends Element = HTMLElement>(
   selector: string,
-  context: ParentNode = document
+  context: Document | HTMLElement = document
 ): T | null => {
   const element = context.querySelector<T>(selector);
   return element;
@@ -26,7 +26,7 @@ export const $ = <T extends Element = HTMLElement>(
  */
 export const $$ = <T extends Element = HTMLElement>(
   selector: string,
-  context: ParentNode = document
+  context: Document | HTMLElement = document
 ): NodeListOf<T> => {
   const elements = context.querySelectorAll<T>(selector);
   return elements;

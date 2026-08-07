@@ -8,8 +8,8 @@ to make changes that survive code review in this template.
 - **Astro 7** — Static site with View Transitions (`<ClientRouter />`).
 - **TypeScript** — Strict mode, path alias `@/*` → `./src/*`.
 - **Tailwind CSS 4** — Configured via VitePlugin (no PostCSS config file).
-- **Cloudflare Pages** — Static-first deployment target; use Pages Functions for small endpoints.
-- **Prettier + oxlint** — Format with `pnpm fmt`, lint with `pnpm lint`.
+- **Cloudflare Workers** — Static assets from `dist/`, deployed with Wrangler.
+- **Oxfmt + oxlint** — Format with `pnpm fmt`, lint with `pnpm lint`.
 
 ## 2. Code rules (CRITICAL)
 
@@ -30,10 +30,12 @@ to make changes that survive code review in this template.
 ```bash
 pnpm dev         # http://localhost:4321
 pnpm build       # static build → ./dist
+pnpm deploy      # build and deploy to Cloudflare Workers
 pnpm type-check  # astro check
 pnpm fmt
 pnpm lint
 pnpm seo:audit   # validates content collection frontmatter
+pnpm wrangler:types
 ```
 
 ## 4. I18n

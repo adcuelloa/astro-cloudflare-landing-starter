@@ -1,40 +1,35 @@
 # Cloudflare setup guide
 
-Last reviewed against Cloudflare and Astro docs on **2026-05-12**.
+Last reviewed against Cloudflare and Astro docs on **2026-08-06**.
 
-This starter is **Cloudflare Pages static-first**:
+This starter is **Cloudflare Workers static-first**:
 
-- **Cloudflare Pages** is the primary deployment target.
-- **Astro builds static HTML/assets** by default; `astro.config.mjs` sets
-  `output: "static"` explicitly for clarity.
-- **Astro `<Image />` works without the Cloudflare adapter**. The template uses
-  a custom external image service so Astro emits responsive markup that points
-  to Cloudflare Image Transformations through `/cdn-cgi/image/...`.
-- **Pages Functions** are the small dynamic escape hatch for contact forms,
-  webhooks, lead capture, and simple APIs.
-- **Cloudflare Workers + `@astrojs/cloudflare`** is an advanced runtime path
-  only when a project needs SSR, Astro Actions, sessions, Server Islands, or
-  runtime Cloudflare bindings inside Astro.
+- `output: "static"` keeps every route prerendered by default.
+- `@astrojs/cloudflare` supplies the unified Workers entrypoint.
+- Wrangler deploys `dist/` through Workers Static Assets.
+- The custom image service continues to emit Cloudflare Image Transformation
+  URLs through `PUBLIC_CDN_URL + "/cdn-cgi/image/..."`.
 
-## 1. Why Pages first
+## 1. Why static Workers
 
 Most landing pages are static: content is known at build time, images are fixed
 or CDN-hosted, and the only dynamic needs are simple form/API endpoints. Astro is
 excellent for this shape because it prerenders pages to static files.
 
-Cloudflare Pages keeps the default workflow simple:
+Workers Static Assets keeps the default workflow simple:
 
 ```txt
-pnpm build -> dist/ -> Cloudflare Pages
+pnpm build -> dist/ -> Cloudflare Workers
 ```
 
-Use Pages Functions when a landing needs a small endpoint. Switch to Workers and
-`@astrojs/cloudflare` only when the app needs Astro runtime features.
+Static requests are served directly from the asset binding. The adapter
+entrypoint is already present if the project later adds an on-demand route,
+Astro Action, session, Server Island, or runtime binding.
 
 Sources:
 [Astro static output](https://docs.astro.build/en/reference/configuration-reference/#output),
-[Deploy Astro to Cloudflare Pages](https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/),
-[Pages Functions](https://developers.cloudflare.com/pages/functions/), and
+[Astro on Cloudflare Workers](https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/),
+[Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/), and
 [Astro Cloudflare adapter](https://docs.astro.build/en/guides/integrations-guide/cloudflare/).
 
 ## 2. Cloudflare account and domain
@@ -44,7 +39,7 @@ Recommended setup:
 1. Add the production domain as a Cloudflare zone.
 2. Point nameservers to Cloudflare.
 3. Use Cloudflare DNS for the production apex, `www`, and optional CDN host.
-4. Create a Cloudflare Pages project from the Git repository.
+4. Create a Worker from the Git repository or deploy it with Wrangler.
 5. Attach the production domain after the first successful deployment.
 
 Typical hostnames:
@@ -55,7 +50,7 @@ www.example.com   # optional redirect/canonical alias
 cdn.example.com   # optional R2 custom domain for image masters
 ```
 
-Source: [Pages custom domains](https://developers.cloudflare.com/pages/configuration/custom-domains/).
+Source: [Workers custom domains](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/).
 
 ## 3. Repository placeholders
 
@@ -71,96 +66,51 @@ Before deploying a real site, replace:
 | `src/lib/integrations/cookieConsent.ts` | Rename the cookie and review consent labels/copy.                   |
 | `public/_headers`                       | Replace `cdn.acme.example.com` and add real third-party allowlists. |
 | `package.json`                          | Update package `name` and `description`.                            |
-| `.node-version`                         | Pin the Node version validated locally and in Cloudflare Pages.     |
+| `.node-version`                         | Pin the Node version validated locally and in Cloudflare Builds.    |
+| `wrangler.jsonc`                        | Set the final Worker name, bindings, and compatibility date.        |
 
 Keep `PUBLIC_*` variables non-secret. Astro exposes them to client-side code.
 
-## 4. Cloudflare Pages deploy
+## 4. Cloudflare Workers deploy
 
-In the Cloudflare dashboard:
+Set the real Worker name in `wrangler.jsonc`, authenticate Wrangler, then run:
 
-1. Go to **Workers & Pages**.
-2. Select **Create application**.
-3. Select **Pages**.
-4. Select **Import an existing Git repository**.
-5. Pick the repository and branch.
-6. Configure build settings:
-
-| Setting                | Value                                     |
-| ---------------------- | ----------------------------------------- |
-| Framework preset       | Astro                                     |
-| Production branch      | `main`                                    |
-| Build command          | `pnpm build`                              |
-| Build output directory | `dist`                                    |
-| Root directory         | repository root                           |
-| Node version           | `.node-version` or `NODE_VERSION=24.15.0` |
-
-Cloudflare Pages provides production deployments and preview deployments for
-pull requests.
-
-Sources:
-[Deploy Astro to Cloudflare Pages](https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/)
-and [Pages build configuration](https://developers.cloudflare.com/pages/configuration/build-configuration/).
-
-## 5. Pages Functions for small dynamic needs
-
-Use Pages Functions when the landing needs a small server endpoint but does not
-need full Astro SSR.
-
-Good fits:
-
-- Contact form endpoint.
-- Newsletter or CRM webhook proxy.
-- Lead capture endpoint with Turnstile validation.
-- Simple API response.
-- Lightweight redirects or request handling.
-
-Create functions in the root `functions/` directory:
-
-```txt
-functions/
-└── api/
-    └── contact.ts   # /api/contact
+```bash
+pnpm deploy
 ```
 
-Example shape:
+The script builds the static Astro site and runs `wrangler deploy`. For a
+non-deploying validation use `pnpm build && pnpm exec wrangler deploy --dry-run`.
 
-```ts
-import type { PagesFunction } from "@cloudflare/workers-types";
-
-export const onRequestPost: PagesFunction = async ({ request }) => {
-  const body = await request.formData();
-  const email = body.get("email");
-
-  if (typeof email !== "string" || !email.includes("@")) {
-    return new Response("Invalid email", { status: 400 });
-  }
-
-  return Response.json({ ok: true });
-};
-```
-
-Pages Functions count against Workers-style limits, but that is usually fine for
-landing-page forms and webhooks.
+For Cloudflare Builds connected to Git, use `pnpm build` as the build command
+and `pnpm deploy` as the deploy command. Pull requests receive preview versions.
 
 Sources:
-[Pages Functions](https://developers.cloudflare.com/pages/functions/),
-[Functions routing](https://developers.cloudflare.com/pages/functions/routing/), and
-[Workers limits](https://developers.cloudflare.com/workers/platform/limits/).
+[Deploy an existing Astro project](https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/#deploy-an-existing-astro-project)
+and [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/).
+
+## 5. Optional runtime routes
+
+Keep the landing static until it needs a contact endpoint, webhook, Astro
+Action, session, Server Island, or Cloudflare binding. Add those as Astro
+on-demand routes so they share the existing adapter and Worker deployment;
+there is no separate functions directory.
+
+Source: [Astro on-demand rendering](https://docs.astro.build/en/guides/on-demand-rendering/).
 
 ## 6. Image strategy
 
 Default image strategy:
 
 1. Store high-quality image masters on an R2/CDN custom domain.
-2. Keep the Astro site static and deploy it to Cloudflare Pages.
+2. Keep the Astro site static and deploy it to Cloudflare Workers.
 3. Use Astro `<Image />` from `astro:assets`.
 4. Let the custom Astro image service emit Cloudflare Image Transformation URLs
    through `PUBLIC_CDN_URL + "/cdn-cgi/image/..."`.
 5. Configure a Cache Rule for `/cdn-cgi/image/` so repeated requests hit cache.
 
-This works without `@astrojs/cloudflare`, without a Worker, without `sharp`, and
-without build-time remote image downloads. The browser receives real responsive
+This works without `sharp` and without build-time remote image downloads. The
+adapter is configured with `imageService: "custom"`, so the browser receives real responsive
 variants from Cloudflare's CDN Image Transformations instead of repeated
 descriptors pointing at the same master.
 
@@ -351,12 +301,12 @@ This template ships:
 - `public/_headers` for security, CSP, and cache headers.
 - `public/_redirects` for simple legacy redirects.
 
-Astro copies `public/` into `dist/`, so Cloudflare Pages reads these files from
-the deployed output.
+Astro copies `public/` into `dist/`, so Workers Static Assets reads these files
+from the deployed output.
 
 Sources:
-[Pages headers](https://developers.cloudflare.com/pages/configuration/headers/)
-and [Pages redirects](https://developers.cloudflare.com/pages/configuration/redirects/).
+[Static Assets headers](https://developers.cloudflare.com/workers/static-assets/headers/)
+and [Static Assets redirects](https://developers.cloudflare.com/workers/static-assets/redirects/).
 
 ## 10. Zaraz, Web Analytics, and consent
 
@@ -365,7 +315,7 @@ cookie-consent bridge in `src/lib/integrations/cookieConsent.ts`.
 
 Recommended setup:
 
-1. Attach the production domain to Cloudflare Pages.
+1. Attach the production domain to the Worker.
 2. Enable Zaraz or Web Analytics for that zone.
 3. If using Zaraz, add third-party tools such as GA4, Meta Pixel, or marketing
    automation inside Zaraz.
@@ -378,15 +328,15 @@ The code must not call `window.zaraz.track()` directly from components. Use the
 typed wrappers so consent gating stays centralized.
 
 Sources:
-[Enable Zaraz on Pages](https://developers.cloudflare.com/pages/how-to/enable-zaraz/),
+[Zaraz](https://developers.cloudflare.com/zaraz/),
 [Zaraz consent management](https://developers.cloudflare.com/zaraz/consent-management/),
 [Zaraz Consent API](https://developers.cloudflare.com/zaraz/consent-management/api/),
 and [Cloudflare Web Analytics](https://developers.cloudflare.com/web-analytics/).
 
-## 11. Advanced: Workers + Astro adapter
+## 11. Adding runtime features
 
-Switch to Workers and `@astrojs/cloudflare` only when the project needs Astro
-runtime features:
+The Workers adapter is already configured. Add runtime rendering only when the
+project needs:
 
 - SSR/on-demand rendering.
 - Astro Actions.
@@ -396,22 +346,9 @@ runtime features:
   Astro components/routes.
 - Adapter-managed Cloudflare image services.
 
-That upgrade changes the architecture:
-
-```bash
-pnpm astro add cloudflare
-```
-
-```js
-import cloudflare from "@astrojs/cloudflare";
-
-export default defineConfig({
-  adapter: cloudflare(),
-});
-```
-
-The Cloudflare adapter targets Workers. Do not document an adapter build as the
-default Cloudflare Pages path.
+After adding or renaming bindings in `wrangler.jsonc`, run
+`pnpm wrangler:types`. Keep routes prerendered unless they genuinely need the
+runtime.
 
 Sources:
 [Astro Cloudflare adapter](https://docs.astro.build/en/guides/integrations-guide/cloudflare/)
@@ -424,7 +361,7 @@ and [Astro on Cloudflare Workers](https://developers.cloudflare.com/workers/fram
 3. `pnpm lint`
 4. `pnpm seo:audit`
 5. `pnpm build`
-6. Check the Pages preview URL.
+6. Check the Workers preview URL.
 7. Verify canonical and `hreflang` links.
 8. Verify CSP does not block images, scripts, fonts, forms, or frames.
 9. Verify image assets are generated and served from `dist/`.
@@ -436,15 +373,14 @@ and [Astro on Cloudflare Workers](https://developers.cloudflare.com/workers/fram
 
 | Product                      | Free-first watchpoint                                                                                                                     |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Cloudflare Pages             | Static asset requests are free/unlimited when Functions are not invoked. Watch build minutes, file count, and asset file size limits.     |
-| Pages Functions              | Functions count against Workers-style quotas; fine for small form/API endpoints, but avoid turning every static page into runtime work.   |
+| Cloudflare Workers           | Static assets are served directly; runtime invocations use Workers quotas. Keep routes prerendered unless they need server behavior.      |
 | Cloudflare Images transforms | Optional only. Images Free includes 5,000 unique transformations/month when using `/cdn-cgi/image` or Cloudflare image transformations.   |
 | R2                           | Standard storage free tier includes 10 GB-month/month, 1M Class A ops/month, 10M Class B ops/month, and free internet egress.             |
 | Zaraz                        | 1,000,000 free Zaraz Events/month; if paid usage is not enabled, Zaraz pauses until the next cycle after the free allocation is exceeded. |
 
 Sources:
-[Pages limits](https://developers.cloudflare.com/pages/platform/limits/),
-[Pages Functions pricing](https://developers.cloudflare.com/pages/functions/pricing/),
+[Workers limits](https://developers.cloudflare.com/workers/platform/limits/),
+[Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/),
 [Cloudflare Images pricing](https://developers.cloudflare.com/images/pricing/),
 [R2 pricing](https://developers.cloudflare.com/r2/pricing/), and
 [Zaraz pricing](https://developers.cloudflare.com/zaraz/pricing-info/).

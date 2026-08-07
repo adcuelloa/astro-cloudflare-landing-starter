@@ -2,7 +2,7 @@
 
 Use this playbook to turn the template into a focused landing page without
 fighting the architecture. The goal is a fast, mostly static, bilingual,
-Cloudflare Pages static site that an agent or developer can ship
+Cloudflare Workers static site that an agent or developer can ship
 repeatedly.
 
 ## Recommended approach
@@ -25,7 +25,7 @@ Good landing page structure:
 
 Keep it static unless there is a real dynamic requirement. A contact CTA can
 link to email, WhatsApp, Calendly, Tally, Typeform, or another service before
-adding Pages Functions.
+adding a runtime route.
 
 ## Inputs to collect
 
@@ -50,18 +50,18 @@ and keep the content easy to replace.
 
 ## Files usually touched
 
-| Area           | Files                                                           |
-| -------------- | --------------------------------------------------------------- |
-| Home page      | `src/pages/index.astro`, `src/pages/es/index.astro`             |
-| Home sections  | `src/components/home/*.astro`                                   |
-| Translations   | `src/i18n/locales/{en,es}/home.json`, `common.json`, `seo.json` |
-| Route metadata | `src/i18n/slugs.ts` if adding/removing routes                   |
-| SEO defaults   | `src/lib/seo.ts`                                                |
-| Visual system  | `src/styles/global.css`                                         |
-| Images         | CDN/R2 masters, Cloudflare image service, `public/_headers` CSP |
-| Navigation     | `src/components/Header.astro`, `src/components/Footer.astro`    |
-| Cloudflare     | `public/_headers`, `public/_redirects`, `.env.example`          |
-| Documentation  | `README.md`, `docs/CLOUDFLARE_SETUP.md` if setup changes        |
+| Area           | Files                                                                    |
+| -------------- | ------------------------------------------------------------------------ |
+| Home page      | `src/pages/index.astro`, `src/pages/es/index.astro`                      |
+| Home sections  | `src/components/home/*.astro`                                            |
+| Translations   | `src/i18n/locales/{en,es}/home.json`, `common.json`, `seo.json`          |
+| Route metadata | `src/i18n/slugs.ts` if adding/removing routes                            |
+| SEO defaults   | `src/lib/seo.ts`                                                         |
+| Visual system  | `src/styles/global.css`                                                  |
+| Images         | CDN/R2 masters, Cloudflare image service, `public/_headers` CSP          |
+| Navigation     | `src/components/Header.astro`, `src/components/Footer.astro`             |
+| Cloudflare     | `wrangler.jsonc`, `public/_headers`, `public/_redirects`, `.env.example` |
+| Documentation  | `README.md`, `docs/CLOUDFLARE_SETUP.md` if setup changes                 |
 
 ## Landing page implementation rules
 
@@ -129,8 +129,8 @@ Follow the repo rules in `CLAUDE.md`:
 
 7. **Review Cloudflare setup**
 
-   Follow `docs/CLOUDFLARE_SETUP.md`: Pages deploy, env vars, custom domain,
-   R2/CDN image host, optional Pages Functions, headers, redirects, analytics,
+   Follow `docs/CLOUDFLARE_SETUP.md`: Workers deploy, env vars, custom domain,
+   R2/CDN image host, optional runtime routes, headers, redirects, analytics,
    and consent.
 
 8. **Validate**
@@ -170,7 +170,7 @@ Create a bilingual landing for [brand] targeting [audience].
 Offer: [offer].
 Primary CTA: [label] -> [destination].
 Visual assets are hosted at [cdn URLs] / use placeholders if missing.
-Keep Cloudflare Pages static-first and update docs if setup changes.
+Keep Cloudflare Workers static-first and update docs if setup changes.
 Run fmt, type-check, lint, seo:audit, and build.
 ```
 
@@ -190,4 +190,4 @@ exposed to Claude-compatible tools through `.claude/skills`.
 9. Zaraz tools are assigned to purposes if used.
 10. Web Analytics or Zaraz pageviews are not duplicated.
 11. `pnpm build` succeeds.
-12. Cloudflare Pages preview URL or custom domain has no CSP, image, or asset errors.
+12. Cloudflare Workers preview URL or custom domain has no CSP, image, or asset errors.

@@ -1,4 +1,4 @@
-# Cloudflare Pages security & cache headers.
+# Cloudflare Workers static asset security & cache headers.
 # CSP whitelist matches what the template integrates with - adjust to your stack.
 
 /*

@@ -2,29 +2,33 @@
   "name": "astro-cloudflare-starter",
   "version": "0.1.0",
   "private": true,
-  "description": "Cloudflare Pages static-first Astro 7 starter with i18n, content collections, GSAP, Zaraz consent analytics, Cloudflare image transformations, Pages Functions guidance, and SEO helpers.",
+  "description": "Cloudflare Workers static-first Astro 7 starter with i18n, content collections, GSAP, Zaraz consent analytics, Cloudflare image transformations, and SEO helpers.",
   "type": "module",
   "scripts": {
     "astro": "astro",
-    "build": "astro build",
+    "build": "astro check && astro build",
     "csp:audit": "node scripts/csp-audit.mjs",
+    "deploy": "pnpm build && wrangler deploy",
     "dev": "astro dev",
     "fmt": "oxfmt",
     "fmt:deps": "syncpack format",
     "i18n:audit": "node scripts/i18n-audit.mjs --strict",
-    "lint": "oxlint --type-aware .",
+    "lint": "astro sync && oxlint --type-aware .",
+    "lint:fix": "astro sync && oxlint --type-aware --fix .",
     "lint:deps": "syncpack lint",
     "preview": "astro preview",
     "seo:audit": "node scripts/seo-audit.mjs",
-    "type-check": "oxlint --type-aware --type-check ."
+    "type-check": "astro sync && oxlint --type-aware --type-check .",
+    "wrangler:types": "wrangler types"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "7.2.1",
+    "@astrojs/cloudflare": "14.2.0",
+    "@astrojs/markdown-remark": "7.2.2",
     "@astrojs/sitemap": "3.7.3",
     "@fontsource-variable/inter": "5.3.0",
     "@fontsource-variable/manrope": "5.3.0",
-    "@lucide/astro": "1.25.0",
-    "astro": "7.1.3",
+    "@lucide/astro": "1.28.0",
+    "astro": "7.2.0",
     "clsx": "2.1.1",
     "gsap": "3.15.0",
     "mdast-util-to-string": "4.0.0",
@@ -33,19 +37,19 @@
     "vanilla-cookieconsent": "3.1.0"
   },
   "devDependencies": {
-    "@astrojs/check": "0.9.9",
+    "@astrojs/check": "0.9.10",
     "@tailwindcss/vite": "4.3.3",
-    "@types/node": "26.1.1",
-    "oxfmt": "0.60.0",
-    "oxlint": "1.75.0",
+    "@types/node": "26.1.2",
+    "oxfmt": "0.62.0",
+    "oxlint": "1.77.0",
     "oxlint-tsgolint": "7.0.2001",
     "syncpack": "15.3.2",
     "tailwindcss": "4.3.3",
     "typescript": "6.0.3",
-    "wrangler": "4.113.0"
+    "wrangler": "4.119.0"
   },
   "engines": {
     "node": ">=24.18.0"
   },
-  "packageManager": "pnpm@11.17.0"
+  "packageManager": "pnpm@11.20.0"
 }
