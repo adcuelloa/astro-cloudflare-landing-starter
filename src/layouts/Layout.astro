@@ -190,15 +190,6 @@ const jsonLdString = jsonLdScript([
       {}
     </script>
 
-    <script is:inline>
-      window.zaraz?.set("google_consent_default", {
-        ad_storage: "denied",
-        ad_user_data: "denied",
-        ad_personalization: "denied",
-        analytics_storage: "denied",
-      });
-    </script>
-
     <script>
       import { initCookieConsent } from "@/lib/integrations/cookieConsent";
       import { initZarazCTAListener } from "@/lib/integrations/zaraz";
