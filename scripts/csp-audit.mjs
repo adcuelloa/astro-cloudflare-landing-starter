@@ -1,85 +1,71 @@
 import { createHash } from "node:crypto";
-import { promises as fs } from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { join, relative } from "node:path";
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const headersPath = path.join(root, "public", "_headers");
-const srcPath = path.join(root, "src");
+const root = process.cwd();
+const outputRoot = join(root, "dist", "client");
+const headersPath = join(root, "public", "_headers");
+const scriptPattern = /<script\b([^>]*)>([\s\S]*?)<\/script>/gi;
+const inertTypePattern = /\btype\s*=\s*["'](?:application\/json|application\/ld\+json)["']/i;
 
-const SCRIPT_RE = /<script\b([^>]*?)(?:\/>|>([\s\S]*?)<\/script>)/gi;
-const INERT_TYPE_RE = /\btype\s*=\s*"(?:application\/json|application\/ld\+json)"/;
+function walk(dir) {
+  return readdirSync(dir).flatMap((name) => {
+    const path = join(dir, name);
+    if (statSync(path).isDirectory()) return walk(path);
+    return path.endsWith(".html") ? [path] : [];
+  });
+}
 
-function hash(value) {
+function sha256(value) {
   return createHash("sha256").update(value, "utf8").digest("base64");
 }
 
-function inlineScriptHashes(source, file) {
-  const scripts = [];
-
-  for (const match of source.matchAll(SCRIPT_RE)) {
-    const attributes = match[1];
-    const content = match[2];
-
-    if (!/\bis:inline\b/.test(attributes)) continue;
-    if (/\bsrc\s*=/.test(attributes) || INERT_TYPE_RE.test(attributes)) continue;
-    if (content === undefined) continue;
-    if (/\bdefine:vars\b/.test(attributes)) {
-      throw new Error(
-        `${file}: <script is:inline define:vars> cannot be hash-validated before Astro renders it`
-      );
-    }
-
-    scripts.push({ hash: hash(content), file });
-  }
-
-  return scripts;
+if (!existsSync(outputRoot)) {
+  throw new Error("dist/client is missing; run pnpm build first");
 }
 
-async function main() {
-  const entries = await fs.readdir(srcPath, { recursive: true, withFileTypes: true });
-  const required = (
-    await Promise.all(
-      entries
-        .filter((entry) => entry.isFile() && entry.name.endsWith(".astro"))
-        .map(async (entry) => {
-          const filePath = path.join(entry.parentPath, entry.name);
-          return inlineScriptHashes(
-            await fs.readFile(filePath, "utf8"),
-            path.relative(root, filePath)
-          );
-        })
-    )
-  ).flat();
+const required = new Map();
+for (const file of walk(outputRoot)) {
+  const html = readFileSync(file, "utf8");
+  for (const match of html.matchAll(scriptPattern)) {
+    const [, attributes, content] = match;
+    if (/\bsrc\s*=/i.test(attributes) || inertTypePattern.test(attributes)) continue;
 
-  const headers = await fs.readFile(headersPath, "utf8");
-  const declared = new Set(
-    [...headers.matchAll(/'sha256-([A-Za-z0-9+/=]+)'/g)].map((match) => match[1])
-  );
-  const expected = new Set(required.map((script) => script.hash));
-  const missing = required.filter(
-    (script, index) =>
-      !declared.has(script.hash) &&
-      required.findIndex((candidate) => candidate.hash === script.hash) === index
-  );
-  const stale = [...declared].filter((declaredHash) => !expected.has(declaredHash));
-
-  for (const script of missing) {
-    console.error(`Missing 'sha256-${script.hash}' from ${script.file}`);
+    const hash = sha256(content);
+    const pages = required.get(hash) ?? new Set();
+    pages.add(relative(outputRoot, file));
+    required.set(hash, pages);
   }
-  for (const staleHash of stale) {
-    console.warn(`Stale 'sha256-${staleHash}' in public/_headers`);
-  }
-
-  if (missing.length > 0) {
-    process.exitCode = 1;
-    return;
-  }
-
-  console.info(`CSP hash audit passed (${expected.size} inline script hashes).`);
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exitCode = 1;
-});
+const headers = readFileSync(headersPath, "utf8");
+const scriptSources = headers.match(/\bscript-src\s+([^;\n]+)/)?.[1];
+if (!scriptSources) throw new Error("public/_headers has no script-src directive");
+
+const declared = new Set(
+  [...scriptSources.matchAll(/'sha256-([A-Za-z0-9+/=]+)'/g)].map((match) => match[1])
+);
+const missing = [...required].filter(([hash]) => !declared.has(hash));
+const stale = [...declared].filter((hash) => !required.has(hash));
+
+if (missing.length > 0) {
+  process.stderr.write(
+    `CSP audit failed. Add these hashes to script-src:\n${missing
+      .map(
+        ([hash, pages]) =>
+          `- 'sha256-${hash}' (${[...pages].slice(0, 3).join(", ")}${pages.size > 3 ? ", …" : ""})`
+      )
+      .join("\n")}\n`
+  );
+  process.exit(1);
+}
+
+if (stale.length > 0) {
+  process.stdout.write(
+    `Stale CSP hashes:\n${stale.map((hash) => `- 'sha256-${hash}'`).join("\n")}\n`
+  );
+}
+
+process.stdout.write(
+  `CSP audit passed: ${required.size} inline script hash${required.size === 1 ? "" : "es"}.\n`
+);
