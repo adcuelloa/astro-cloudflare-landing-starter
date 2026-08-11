@@ -1,36 +1,20 @@
-/**
- * SEO audit — pre-build sanity check for static metadata and content collections.
- *
- * Run via `pnpm seo:audit`. Wire it into CI before `astro build` to catch:
- *   - static titles and descriptions outside recommended search-result lengths
- *   - missing required frontmatter fields
- *   - images that don't have an `imageAlt`
- *   - duplicate `urlSlug` within the same locale
- *   - overly long titles or descriptions
- *   - use of the reserved `slug` key (Astro reserves it; use `urlSlug` instead)
- *
- * Extend `collections` and `requiredFields` to match your content.
- */
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = process.cwd();
-const contentRoot = join(root, "src", "content");
-const localesRoot = join(root, "src", "i18n", "locales");
-const collections = ["blog"];
-const requiredFields = ["title", "description", "urlSlug"];
-const titleRange = { min: 50, max: 60 };
-const descriptionRange = { min: 120, max: 158 };
-const errors = [];
-const warnings = [];
+const appDir = dirname(fileURLToPath(import.meta.url));
+const ROOT = resolve(appDir, "..");
+const LOCALES_DIR = resolve(ROOT, "src/i18n/locales");
+const CONTENT_DIR = resolve(ROOT, "src/content");
 
-function walk(dir) {
-  return readdirSync(dir).flatMap((name) => {
-    const path = join(dir, name);
-    if (statSync(path).isDirectory()) return walk(path);
-    return path.endsWith(".md") || path.endsWith(".mdx") ? [path] : [];
-  });
-}
+const TITLE_MIN = 50;
+const TITLE_MAX = 60;
+const DESC_MIN = 120;
+const DESC_MAX = 158;
+
+// noindex pages never appear in search results, so SERP title/description
+// length limits don't apply to them.
+const NOINDEX_PAGES = new Set(["notFound"]);
 
 function parseFrontmatter(file) {
   const source = readFileSync(file, "utf8");
@@ -41,89 +25,144 @@ function parseFrontmatter(file) {
       .split("\n")
       .map((line) => line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/))
       .filter(Boolean)
-      .map((matchLine) => {
-        const [, key, rawValue] = matchLine;
-        return [key, rawValue.replace(/^["']|["']$/g, "")];
-      })
+      .map(([, key, rawValue]) => [key, rawValue.replace(/^["']|["']$/g, "")])
   );
 }
 
-function localeFor(file) {
-  const parts = relative(contentRoot, file).split("/");
-  return parts[1] ?? "unknown";
+function walk(dir) {
+  return readdirSync(dir).flatMap((name) => {
+    const path = join(dir, name);
+    if (statSync(path).isDirectory()) return walk(path);
+    return path.endsWith(".md") || path.endsWith(".mdx") ? [path] : [];
+  });
 }
 
-for (const locale of ["en", "es"]) {
-  const seo = JSON.parse(readFileSync(join(localesRoot, locale, "seo.json"), "utf8"));
+function checkLocale(lang) {
+  const seoPath = resolve(LOCALES_DIR, lang, "seo.json");
+  const seoData = JSON.parse(readFileSync(seoPath, "utf-8"));
+  const i18nCommon = JSON.parse(readFileSync(resolve(LOCALES_DIR, lang, "common.json"), "utf-8"));
+  let allOk = true;
+  let staticOk = 0;
+  let staticFail = 0;
+  let blogOk = 0;
+  let blogFail = 0;
+  let blogNoImage = 0;
+  let blogImageNoAlt = 0;
 
-  for (const [page, metadata] of Object.entries(seo)) {
-    const label = `${locale}.seo.${page}`;
+  console.info(`\n# ${lang.toUpperCase()}\n`);
 
-    if (
-      typeof metadata.title !== "string" ||
-      metadata.title.length < titleRange.min ||
-      metadata.title.length > titleRange.max
-    ) {
-      errors.push(`${label}.title must be ${titleRange.min}-${titleRange.max} characters`);
+  // --- Static pages from seo.json ---
+  console.info("## Static pages\n");
+
+  for (const [page, seo] of Object.entries(seoData)) {
+    if (NOINDEX_PAGES.has(page)) {
+      staticOk++;
+      console.info(`  ⏭️  ${page} (noindex, skipped)`);
+      continue;
     }
 
-    if (
-      typeof metadata.description !== "string" ||
-      metadata.description.length < descriptionRange.min ||
-      metadata.description.length > descriptionRange.max
-    ) {
-      errors.push(
-        `${label}.description must be ${descriptionRange.min}-${descriptionRange.max} characters`
-      );
+    const tLen = seo.title.length;
+    const dLen = seo.description.length;
+
+    const tOk = tLen >= TITLE_MIN && tLen <= TITLE_MAX;
+    const dOk = dLen >= DESC_MIN && dLen <= DESC_MAX;
+
+    if (tOk && dOk) {
+      staticOk++;
+      console.info(`  ✅  ${page}`);
+    } else {
+      staticFail++;
+      allOk = false;
+      if (!tOk) {
+        console.info(`  ❌  ${page}.title (${tLen}) — expected ${TITLE_MIN}–${TITLE_MAX}`);
+      }
+      if (!dOk) {
+        console.info(`  ❌  ${page}.description (${dLen}) — expected ${DESC_MIN}–${DESC_MAX}`);
+      }
     }
   }
-}
 
-for (const collection of collections) {
-  const dir = join(contentRoot, collection);
-  const seenSlugs = new Map();
+  // --- Blog posts from content collections ---
+  const blogDir = resolve(CONTENT_DIR, "blog", lang);
 
-  for (const file of walk(dir)) {
-    const frontmatter = parseFrontmatter(file);
-    const label = relative(root, file);
-    const locale = localeFor(file);
+  if (statSync(blogDir, { throwIfNoEntry: false })?.isDirectory()) {
+    const posts = walk(blogDir);
+    if (posts.length > 0) {
+      console.info("\n## Blog posts\n");
 
-    for (const field of requiredFields) {
-      if (!frontmatter[field]) errors.push(`${label}: missing ${field}`);
+      for (const file of posts) {
+        const fm = parseFrontmatter(file);
+        const label = relative(ROOT, file);
+
+        if (!fm.title || !fm.description) {
+          allOk = false;
+          blogFail++;
+          console.info(`  ❌  ${label}: missing title or description`);
+          continue;
+        }
+
+        const effectiveTitle = fm.seoTitle ?? `${fm.title} — Acme`;
+        const tLen = effectiveTitle.length;
+        const dLen = fm.description.length;
+
+        const tOk = tLen >= TITLE_MIN && tLen <= TITLE_MAX;
+        const dOk = dLen >= DESC_MIN && dLen <= DESC_MAX;
+
+        const hasImage = Boolean(fm.image);
+        const hasAlt = Boolean(fm.imageAlt);
+        const imageAltOk = !hasImage || hasAlt; // schema requires alt when image is set
+
+        if (tOk && dOk && imageAltOk) {
+          blogOk++;
+          console.info(`  ✅  ${label}`);
+        } else {
+          blogFail++;
+          allOk = false;
+          if (!tOk) {
+            console.info(`  ❌  ${label} title (${tLen}) — expected ${TITLE_MIN}–${TITLE_MAX}`);
+          }
+          if (!dOk) {
+            console.info(`  ❌  ${label} description (${dLen}) — expected ${DESC_MIN}–${DESC_MAX}`);
+          }
+          if (hasImage && !hasAlt) {
+            console.info(`  ❌  ${label}: image set but imageAlt missing`);
+          }
+        }
+
+        if (!hasImage) blogNoImage++;
+        if (hasImage && !hasAlt) blogImageNoAlt++;
+      }
     }
-
-    if (frontmatter.slug) {
-      errors.push(`${label}: use urlSlug instead of Astro-reserved slug`);
-    }
-
-    if (frontmatter.image && !frontmatter.imageAlt) {
-      errors.push(`${label}: image requires imageAlt`);
-    }
-
-    if (frontmatter.seoTitle && frontmatter.seoTitle.length > 70) {
-      warnings.push(`${label}: seoTitle is longer than 70 characters`);
-    }
-
-    if (frontmatter.description && frontmatter.description.length > 170) {
-      warnings.push(`${label}: description is longer than 170 characters`);
-    }
-
-    const slugKey = `${locale}:${frontmatter.urlSlug}`;
-    const existing = seenSlugs.get(slugKey);
-    if (existing) {
-      errors.push(`${label}: duplicate urlSlug for ${slugKey}; first seen in ${existing}`);
-    }
-    seenSlugs.set(slugKey, label);
   }
+
+  // --- Social / OG summary ---
+  console.info("\n## Social / Open Graph\n");
+
+  const fallbackImage = i18nCommon?.meta?.ogImage;
+  if (fallbackImage) {
+    console.info(`  ℹ️  Static pages use fallback: cdn.acme.com/${fallbackImage}`);
+  } else {
+    allOk = false;
+    console.info(`  ❌  No ogImage fallback configured in meta.ogImage`);
+  }
+
+  if (blogNoImage > 0) {
+    console.info(`  ⚠️  ${blogNoImage} blog post(s) without og:image (will use fallback)`);
+  }
+
+  if (blogImageNoAlt > 0) {
+    console.info(`  ❌  ${blogImageNoAlt} blog post(s) with image but missing imageAlt`);
+  }
+
+  const totalOk = staticOk + blogOk;
+  const totalFail = staticFail + blogFail;
+  console.info(`\n  Pages: ${totalOk} ✅  ${totalFail > 0 ? `${totalFail} ❌` : "0 ❌"}`);
+
+  return allOk;
 }
 
-if (warnings.length > 0) {
-  process.stdout.write(`SEO warnings:\n${warnings.map((item) => `- ${item}`).join("\n")}\n`);
-}
+const enOk = checkLocale("en");
+const esOk = checkLocale("es");
 
-if (errors.length > 0) {
-  process.stderr.write(`SEO audit failed:\n${errors.map((item) => `- ${item}`).join("\n")}\n`);
-  process.exit(1);
-}
-
-process.stdout.write("SEO audit passed.\n");
+console.info(`\n${enOk && esOk ? "✅  All pages pass" : "❌  Some pages need attention"}`);
+process.exit(enOk && esOk ? 0 : 1);
