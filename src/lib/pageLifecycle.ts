@@ -12,7 +12,7 @@ function captureScrollTarget(event: TransitionBeforeSwapEvent): void {
 
 function applyPendingScroll(): void {
   if (pendingScrollY === null || location.hash) return;
-  window.scrollTo({ left: 0, top: pendingScrollY, behavior: "instant" });
+  window.scrollTo({ left: 0, top: pendingScrollY, behavior: "auto" });
 }
 
 function finishPendingScroll(): void {
